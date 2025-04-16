@@ -1,0 +1,24 @@
+# Ignorer les fichiers Python compilés
+__pycache__/
+*.py[cod]
+
+# Ignorer les fichiers de log
+*.log
+
+# Ignorer la base de données SQLite
+db.sqlite3
+
+# Ignorer les fichiers/dossiers temporaires
+*.tmp
+*.swp
+
+# Environnement virtuel
+venv/
+.env
+
+# Dossiers statiques et médias (générés automatiquement)
+static/
+media/
+
+# Paramètres VS Code
+.vscode/

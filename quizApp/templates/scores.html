@@ -1,0 +1,39 @@
+<div class="container my-5">
+    <h1 class="display-5 text-center mb-4">Tableau des Scores</h1>
+    <div class="table-responsive">
+      <table class="table table-bordered table-striped text-center align-middle">
+        <thead class="table-dark">
+          <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Type de Quiz</th>
+            <th>Score final</th>
+            <th>Date de participation</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for score in scores %}
+          <tr>
+            <td>{{ score.participant.nom }}</td>
+            <td>{{ score.participant.prenom }}</td>
+            <td>
+              {% if score.type_quiz == 'culture' %}Culture Générale
+              {% elif score.type_quiz == 'sciences' %}Sciences
+              {% elif score.type_quiz == 'histoire' %}Histoire
+              {% elif score.type_quiz == 'geographie' %}Géographie
+              {% else %}Inconnu
+              {% endif %}
+            </td>
+            <td>{{ score.score_final }}/10</td>
+            <td>{{ score.date_participation|date:"d/m/Y" }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5">Aucun score enregistré pour le moment.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
