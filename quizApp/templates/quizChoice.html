@@ -144,10 +144,10 @@
 
     <div class="mb-3">
       <label for="categoryFilter" class="form-label fw-bold">Filtrer par catégorie :</label>
-    <select id="categoryFilter" class="form-select form-select-sm rounded-pill shadow-sm text-center w-50 mx-auto" >
+    <select id="categoryFilter" class="form-select form-select-sm rounded-pill shadow-sm text-center w-50 mx-auto" style="background-color:rgba(255, 255, 255, 0.1); color: #fff;">
       <option value="all">Toutes les catégories</option>
       {% for categorie in categories %}
-        <option  value="{{ categorie.type_quiz|slugify }}">{{ categorie.type_quiz }}</option>
+        <option  value="{{ categorie.type_quiz|slugify }}" style="color: #333;">{{ categorie.type_quiz }}</option>
       {% endfor %}
     </select>
     </div>
