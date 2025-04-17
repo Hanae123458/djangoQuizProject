@@ -154,20 +154,46 @@
                 </div>
             </div>
         </div>
-    </nav><h1>Questions du quiz choisi:</h1>
+    </nav>
+    <h1>{{quiz.title}}</h1>
+    <p class="text-center text-white">{{quiz.description}}</p>
 <form action="{% url 'resultatQuiz' %}" method="post">
     {% csrf_token %}
+    
     {% for question in questions %}
-    <div style="margin-bottom: 20px;">
-        <strong>{{ question.question_text }}</strong><br>
-        <input type="hidden" name="idQuiz" value="{{quiz.id}}">
-        <input type="radio" name="{{question.id}}" value="1" required> {{ question.reponse_1 }}<br>
-        <input type="radio" name="{{question.id}}" value="2" required> {{ question.reponse_2 }}<br>
-        <input type="radio" name="{{question.id}}" value="3" required> {{ question.reponse_3 }}<br>
-        <input type="radio" name="{{question.id}}" value="4" required> {{ question.reponse_4 }}<br>
+    <div class="d-flex justify-content-center">
+  <div class="card mb-4 w-50 shadow bg-white bg-opacity-10 border border-white border-opacity-25 text-white">
+    <div class="card-body">
+      <h5 class="card-title text-center fw-bold fs-5">{{question.question_text}}</h5>
+      <input type="hidden" name="idQuiz" value="1">
+  
+      <div class="form-check mb-2">
+        <input class="form-check-input " style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="1" id="{{question.id}}option1" required>
+        <label class="form-check-label" for="{{question.id}}option1">{{ question.reponse_1 }}</label>
+      </div>
+  
+      <div class="form-check mb-2">
+        <input class="form-check-input" style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="2" id="{{question.id}}option2" required>
+        <label class="form-check-label" for="{{question.id}}option2">{{ question.reponse_2 }}</label>
+      </div>
+  
+      <div class="form-check mb-2">
+        <input class="form-check-input" style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="3" id="{{question.id}}option3" required>
+        <label class="form-check-label" for="{{question.id}}option3">{{ question.reponse_3 }}</label>
+      </div>
+  
+      <div class="form-check mb-2">
+        <input class="form-check-input" style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="4" id="{{question.id}}option4" required>
+        <label class="form-check-label" for="{{question.id}}option4">{{ question.reponse_4 }}</label>
+      </div>
     </div>
-    {% endfor %}
-    <button type="submit">Envoyer</button>
+  </div>
+<br>  
+</div>
+  {% endfor %}
+  <div class="text-center mt-4">
+    <button type="submit" class="btn shadow bg-white bg-opacity-10 btn-primary btn-lg px-5">Envoyer</button>
+  </div>
 </form>
 
     
