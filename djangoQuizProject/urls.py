@@ -24,9 +24,9 @@ from django.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
-    path('quiz', include('quizApp.urls')),
-    path('signup/', views.TraitementFormulaireInscription, name='signup'),
+    path('', views.home.as_view(), name='home'),
+    path('quiz/', include('quizApp.urls')),
+    path('signup/', views.TraitementFormulaireInscription.as_view(), name='signup'),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name="login"),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name="logout"),
 

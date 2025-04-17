@@ -17,8 +17,9 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 AUTH_USER_MODEL="quizApp.Participant"
-LOGIN_REDIRECT_URL='/quizPage'
+LOGIN_REDIRECT_URL='/'
 LOGOUT_REDIRECT_URL='/login'
+LOGIN_URL='/login'
 
 
 
@@ -88,16 +89,16 @@ DATABASES = {
 }
 
 
-DATABASES={
-    'default':{ 
-                'ENGINE': 'django.db.backends.mysql',
-                'NAME': 'gestionquiz',
-                'USER': 'root',
-                'PASSWORD': '',
-                'HOST': 'localhost',
-                'PORT': '3306',
-             }
-}
+#DATABASES={
+#    'default':{ 
+#                'ENGINE': 'django.db.backends.mysql',
+#                'NAME': 'gestionquiz',
+#                'USER': 'root',
+#                'PASSWORD': '',
+#                'HOST': 'localhost',
+#                'PORT': '3306',
+#            }
+#}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
