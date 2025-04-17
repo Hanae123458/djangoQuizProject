@@ -9,14 +9,15 @@ import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 
-def home(request):
-    return render(request, "home.html")
+
 
 User = get_user_model()
 
 class home(View):
     def get(self, request):
-        return render(request, "home.html")
+        user = request.user
+            
+        return render(request, "home.html", {'user': user})
 
 class TraitementFormulaireInscription(View):
     def get(self, request):

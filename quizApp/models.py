@@ -4,6 +4,10 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
 class Participant(AbstractUser):
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+    level = models.IntegerField(default=1)
+    xp = models.IntegerField(default=0)
+    bio = models.TextField(max_length=500, blank=True, null=True)
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -40,4 +44,4 @@ class Score(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='scores')
 
     def __str__(self):
-        return f"{self.participant} {self.score_final}/10"
+        return f"{self.participant} {self.score_final}/{self.quiz.question_set.count()}"

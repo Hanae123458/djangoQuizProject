@@ -22,3 +22,6 @@ media/
 
 # Paramètres VS Code
 .vscode/
+
+# Ignorer les fichiers de migrations Django
+migrations/

@@ -120,8 +120,21 @@
         <li class="nav-item"><a class="nav-link active" href="{% url 'quizPage' %}">QuizPage</a></li>
       </ul>
       <div>
-        <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Connexion</a>
-        <a href="{% url 'signup' %}" class="btn btn-main">Inscription</a>
+        {% if user.is_authenticated %}
+          <div class="d-inline">
+            <a href="" class="me-2"></a>
+              <img src="{{ user.profile_picture.url }}" alt="Profil" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px;">
+            </a>
+            <form action="{% url 'logout' %}" method="post" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-light me-2">Déconnexion</button>
+            </form>
+          </div>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Connexion</a>
+          <a href="{% url 'signup' %}" class="btn btn-main">Inscription</a>
+        {% endif %}
+        
       </div>
     </div>
   </div>
@@ -130,6 +143,9 @@
 <!-- Hero Section -->
 <section class="hero">
   <div class="container">
+    {% if user.is_authenticated %}
+      <h1>Bienvenue, {{ user.username }} !</h1>
+    {% endif %}
     <h1>Testez vos connaissances en vous amusant</h1>
     <p>Choisissez un thème et lancez un défi ! Des milliers de questions pour tous les niveaux.</p>
     <a href="#quizzes" class="btn btn-main">Commencer</a>
