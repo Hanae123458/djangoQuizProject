@@ -67,6 +67,11 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
             if user_answer and int(user_answer) == question.bonne_reponse:
                 score += 1
 
+        user = request.user
+        user.xp += score * 100 
+        user.level = user.xp // 1000 + 1
+        user.save()
+
         scoreObtenu = Score.objects.create(
             participant=request.user,
             score_final=score,
@@ -84,4 +89,10 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
 
 
 
-
+class profile(LoginRequiredMixin, View):
+    def get(self, request):
+        user = request.user
+        scores = Score.objects.filter(participant=user).order_by('date_participation')
+        scores = scores[:5:-1] if len(scores) > 5 else scores[::-1]
+        return render(request, 'profile.html', {'user': user,
+                                                'scores': scores})
