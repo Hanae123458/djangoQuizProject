@@ -108,20 +108,20 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
   <div class="container">
-    <a class="navbar-brand fw-bold" href="/home/"><i class="fas fa-brain me-2"></i>QuizApp</a>
+    <a class="navbar-brand fw-bold" href="{% url 'home' %}"><i class="fas fa-brain me-2"></i>QuizApp</a>
     <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto">
-        <li class="nav-item"><a class="nav-link active" href="/home">Accueil</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Accueil</a></li>
       </ul>
       <ul class="navbar-nav me-auto">
-        <li class="nav-item"><a class="nav-link active" href="/quizPage">QuizPage</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{% url 'quizPage' %}">QuizPage</a></li>
       </ul>
       <div>
-        <a href="/login/" class="btn btn-outline-light me-2">Connexion</a>
-        <a href="/signup/" class="btn btn-main">Inscription</a>
+        <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Connexion</a>
+        <a href="{% url 'signup' %}" class="btn btn-main">Inscription</a>
       </div>
     </div>
   </div>

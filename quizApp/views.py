@@ -6,6 +6,7 @@ from .forms import QuizCategoryForm
 from .models import Quiz
 from .models import Score
 import datetime
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def home(request):
     return render(request,"home.html")

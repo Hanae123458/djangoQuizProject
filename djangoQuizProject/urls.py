@@ -17,17 +17,16 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from quizApp import views
+from quizApp import views, urls
 from django.contrib.auth import views as auth_views
+from django.urls import include
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/', views.home),
-    path('quizPage/', views.quizPage),
-    path('quizCommence/', views.quizCommence),
-    path('resultatQuiz/', views.validerReponsesQuiz),
-    path('signup/', views.TraitementFormulaireInscription),
+    path('', views.home, name='home'),
+    path('quiz', include('quizApp.urls')),
+    path('signup/', views.TraitementFormulaireInscription, name='signup'),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name="login"),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name="logout"),
 

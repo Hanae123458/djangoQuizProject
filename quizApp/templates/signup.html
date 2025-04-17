@@ -106,7 +106,7 @@
 
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container">
-      <a class="navbar-brand" href="/home/">QuizApp</a>
+      <a class="navbar-brand" href="{% url 'home' %}">QuizApp</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -114,7 +114,7 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/home/">Home</a>
+            <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Quiz</a>
@@ -133,7 +133,7 @@
         {{ form.as_p }}
         <button type="submit">S'inscrire</button>
       </form>
-      <p class="text-center mt-3">Déjà inscrit ? <a href="/login">Se connecter</a></p>
+      <p class="text-center mt-3">Déjà inscrit ? <a href="{% url 'login' %}">Se connecter</a></p>
     </div>
   </div>
 
