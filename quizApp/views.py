@@ -3,7 +3,7 @@ from django.contrib.auth import login, get_user_model
 from django.contrib import messages
 from .forms import SignUpForm
 from .forms import QuizCategoryForm
-from .models import Quiz
+from .models import Quiz, Categorie
 from .models import Score
 import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -36,9 +36,21 @@ class quizPage(LoginRequiredMixin, View):
         form = QuizCategoryForm()
         return render(request, 'quizPage.html', {'form': form})
 
-class quizCommence(LoginRequiredMixin, View):
+class quizChoice(LoginRequiredMixin, View):
     def get(self, request):
-        quiz = get_object_or_404(Quiz, type_quiz=request.GET.get('categorie'))
+        type_quiz = request.GET.get('categorie')
+        categories = Categorie.objects.prefetch_related('quiz_set')
+        if type_quiz:
+            quiz = Quiz.objects.filter(type_quiz__type_quiz=type_quiz)
+        else:
+            quiz = Quiz.objects.all()
+        return render(request, 'quizChoice.html', {'quiz': quiz,
+                                                    'categories': categories,
+                                                    'type_quiz': type_quiz})
+
+class quizCommence(LoginRequiredMixin, View):
+    def get(self, request, quiz_id):
+        quiz = get_object_or_404(Quiz, id=quiz_id)
         questions = quiz.question_set.all()
         return render(request, 'quizCommence.html', {'quiz': quiz, 'questions': questions})
 
@@ -61,7 +73,12 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
             quiz=quiz
         )
         total = len(questions)
-        return render(request, 'resultatQuiz.html', {"user": request.user, 'quiz': quiz, 'questions': questions, 'score': scoreObtenu, 'total': total})
+        return render(request, 'resultatQuiz.html', {"user": request.user,
+                                                    'quiz': quiz,
+                                                    'questions': questions,
+                                                    'score': scoreObtenu,
+                                                    'total': total
+                                                    })
 
 
 
