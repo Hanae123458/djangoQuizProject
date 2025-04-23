@@ -95,50 +95,60 @@
   <div class="card mb-4 w-50 shadow bg-white bg-opacity-10 border border-white border-opacity-25 text-white">
     <div class="card-body">
       <h5 class="card-title text-center fw-bold fs-5">{{user_answer.question.question_text}}</h5>
-      <input type="hidden" name="idQuiz" value="1">
-  
-      <div class="form-check mb-2">
-        <input class="form-check-input "
-        {% if user_answer.user_answer == 1  %}
-        checked
-        {% endif %}
-        style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="1" id="{{question.id}}option1" required>
-        <label class="form-check-label" for="{{question.id}}option1">{{ user_answer.question.reponse_1 }}</label>
-      </div>
+      <input disabled type="hidden" name="idQuiz" value="1">
   
       <div class="form-check mb-2">
         <input class="form-check-input"
-        {% if user_answer.user_answer == 2  %}
-        checked
+        {% if user_answer.user_answer == 1 %}
+        
         {% endif %}
-        style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="2" id="{{question.id}}option2" required>
-        <label class="form-check-label" for="{{question.id}}option2">{{user_answer.question.reponse_2 }}</label>
+        style="transform: scale(1.2); {% if 1 == user_answer.question.bonne_reponse %}background-color: green;{% elif user_answer.user_answer == 1 %}background-color: red;{% endif %}" type="radio" name="{{user_answer.question.id}}" value="1" id="{{user_answer.question.id}}option1" required>
+        <label class="form-check-label" for="{{user_answer.question.id}}option1">{{ user_answer.question.reponse_1 }}</label>
       </div>
-  
+
       <div class="form-check mb-2">
-        <input class="form-check-input"
-        {% if user_answer.user_answer == 3  %}
-        checked
-        {% endif %}
-        style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="3" id="{{question.id}}option3" required>
-        <label class="form-check-label" for="{{question.id}}option3">{{ user_answer.question.reponse_3 }}</label>
+        <input disabled class="form-check-input"
+        style="transform: scale(1.2); 
+        {% if 2 == user_answer.question.bonne_reponse %}
+        background-color: green;
+        {% elif user_answer.user_answer == 2 %}
+        background-color: red;
+        {% endif %}" type="radio" name="{{user_answer.question.id}}"
+        value="2" id="{{user_answer.question.id}}option2" required>
+        <label class="form-check-label" for="{{user_answer.question.id}}option2">{{ user_answer.question.reponse_2 }}</label>
       </div>
-  
+
       <div class="form-check mb-2">
-        <input class="form-check-input"
-        {% if user_answer.user_answer == 4  %}
-        checked
+        <input disabled class="form-check-input"
+        {% if user_answer.user_answer == 3 %}
+        
         {% endif %}
-        style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="4" id="{{question.id}}option4" required>
-        <label class="form-check-label" for="{{question.id}}option4">{{ user_answer.question.reponse_4 }}</label>
+        style="transform: scale(1.2); {% if 3 == user_answer.question.bonne_reponse %}background-color: green;{% elif user_answer.user_answer == 3 %}background-color: red;{% endif %}" type="radio" name="{{user_answer.question.id}}" value="3" id="{{user_answer.question.id}}option3" required>
+        <label class="form-check-label" for="{{user_answer.question.id}}option3">{{ user_answer.question.reponse_3 }}</label>
+      </div>
+
+      <div class="form-check mb-2">
+        <input disabled class="form-check-input"
+        {% if user_answer.user_answer == 4 %}
+        
+        {% endif %}
+        style="transform: scale(1.2); {% if 4 == user_answer.question.bonne_reponse %}background-color: green;{% elif user_answer.user_answer == 4 %}background-color: red;{% endif %}" type="radio" name="{{user_answer.question.id}}" value="4" id="{{user_answer.question.id}}option4" required>
+        <label class="form-check-label" for="{{user_answer.question.id}}option4">{{ user_answer.question.reponse_4 }}</label>
       </div>
       <div class="form-check mb-2">
         
-        <p>{{user_answer.question.bonne_reponse}}</p>  
+        <div class="text-center"></div>
+    {% if user_answer.user_answer == user_answer.question.bonne_reponse %}
+        <p class="text-success fw-bold">🎉Bonne réponse !</p>
+    {% else %}
+        <p class="text-danger fw-bold">😢Mauvaise réponse.</p>
+    {% endif %}
+</div>
       </div>
     </div>
   </div>
 <br>  
+
 </div>
   {% endfor %}
 
