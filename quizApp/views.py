@@ -62,8 +62,11 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
         questions = quiz.question_set.all()
 
         score = 0
+        user_answers = []
         for question in questions:
             user_answer = request.POST.get(str(question.id))
+            user_answers.append({"question" : question,
+                                "user_answer" : int(user_answer)})
             if user_answer and int(user_answer) == question.bonne_reponse:
                 score += 1
 
@@ -83,7 +86,8 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
                                                     'quiz': quiz,
                                                     'questions': questions,
                                                     'score': scoreObtenu,
-                                                    'total': total
+                                                    'total': total,
+                                                    "user_answers":user_answers
                                                     })
 
 

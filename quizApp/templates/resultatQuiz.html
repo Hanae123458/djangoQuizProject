@@ -90,6 +90,59 @@
         <a href="{% url 'home' %}" class="btn-retour">Retour à l'accueil</a>
     </div>
 
+    {% for user_answer in user_answers %}
+    <div class="d-flex justify-content-center">
+  <div class="card mb-4 w-50 shadow bg-white bg-opacity-10 border border-white border-opacity-25 text-white">
+    <div class="card-body">
+      <h5 class="card-title text-center fw-bold fs-5">{{user_answer.question.question_text}}</h5>
+      <input type="hidden" name="idQuiz" value="1">
+  
+      <div class="form-check mb-2">
+        <input class="form-check-input "
+        {% if user_answer.user_answer == 1  %}
+        checked
+        {% endif %}
+        style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="1" id="{{question.id}}option1" required>
+        <label class="form-check-label" for="{{question.id}}option1">{{ user_answer.question.reponse_1 }}</label>
+      </div>
+  
+      <div class="form-check mb-2">
+        <input class="form-check-input"
+        {% if user_answer.user_answer == 2  %}
+        checked
+        {% endif %}
+        style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="2" id="{{question.id}}option2" required>
+        <label class="form-check-label" for="{{question.id}}option2">{{user_answer.question.reponse_2 }}</label>
+      </div>
+  
+      <div class="form-check mb-2">
+        <input class="form-check-input"
+        {% if user_answer.user_answer == 3  %}
+        checked
+        {% endif %}
+        style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="3" id="{{question.id}}option3" required>
+        <label class="form-check-label" for="{{question.id}}option3">{{ user_answer.question.reponse_3 }}</label>
+      </div>
+  
+      <div class="form-check mb-2">
+        <input class="form-check-input"
+        {% if user_answer.user_answer == 4  %}
+        checked
+        {% endif %}
+        style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="4" id="{{question.id}}option4" required>
+        <label class="form-check-label" for="{{question.id}}option4">{{ user_answer.question.reponse_4 }}</label>
+      </div>
+      <div class="form-check mb-2">
+        
+        <p>{{user_answer.question.bonne_reponse}}</p>  
+      </div>
+    </div>
+  </div>
+<br>  
+</div>
+  {% endfor %}
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
