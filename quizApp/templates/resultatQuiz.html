@@ -1,148 +1,156 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Résultat du Quiz</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            font-family: 'Poppins', sans-serif;
-            color: #fff;
-            margin: 0;
-            padding: 2rem 1rem;
-            min-height: 100vh;
-        }
-
-        .result-container {
-            max-width: 700px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 2rem 3rem;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-            backdrop-filter: blur(8.5px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            animation: fadeIn 1s ease-in-out;
-        }
-
-        h2 {
-            text-align: center;
-            font-weight: 700;
-            font-size: 2.3rem;
-            margin-bottom: 1.5rem;
-            text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
-        }
-
-        .details p {
-            font-size: 1.2rem;
-            margin-bottom: 1rem;
-            color: #fff;
-        }
-
-        .score {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #ffd700;
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .btn-retour {
-            display: block;
-            margin: 2rem auto 0;
-            padding: 10px 25px;
-            background-color: #fff;
-            color: #764ba2;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-retour:hover {
-            background-color: #ffd700;
-            color: #333;
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-        }
-    </style>
+<meta charset="UTF-8" />
+<title>Résultat du Quiz</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" />
+<style>
+  body {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    font-family: 'Poppins', sans-serif;
+    color: #fff;
+    margin: 0;
+    padding: 2rem 1rem;
+    min-height: 100vh;
+  }
+  .result-container {
+    max-width: 700px;
+    margin: 0 auto 2rem;
+    background: rgba(146, 142, 142, 0.034);
+    border-radius: 15px;
+    padding: 2rem 3rem;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(8.5px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    animation: fadeIn 1s ease-in-out;
+  }
+  h2 {
+    text-align: center;
+    font-weight: 700;
+    font-size: 2.3rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+  }
+  .score {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffd700;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 2rem;
+  }
+  .btn-retour {
+    display: block;
+    margin: 2rem auto 0;
+    padding: 10px 25px;
+    background-color: #fff;
+    color: #764ba2;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    width: fit-content;
+    text-align: center;
+  }
+  .btn-retour:hover {
+    background-color: #ffd700;
+    color: #333;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  }
+  .answer-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 1.5rem;
+  }
+  .answer-list li {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    background: rgba(255 255 255 / 0.1);
+  }
+  .checked-answer {
+    font-weight: 600;
+    border: 2px solid #ffd700;
+    background: rgba(255 215 0 / 0.2);
+  }
+  .correct-answer {
+    color: #28a745;
+    font-weight: 700;
+  }
+  .user-answer.correct {
+    color: #28a745;
+    font-weight: 700;
+  }
+  .user-answer.wrong {
+    color: #dc3545;
+    font-weight: 700;
+  }
+  .icon {
+    font-weight: 900;
+    margin-left: 0.5rem;
+  }
+</style>
 </head>
 <body>
 
-    <div class="result-container">
-        <h2>Résultat du Quiz</h2>
-        <div class="details">
-            <p><strong>Participant :</strong> {{ user.first_name }} {{ user.last_name }}</p>
-            <p><strong>Date de participation :</strong> {{ score.date_participation|date:"d M Y H:i" }}</p>
-            <p><strong>Quiz passé :</strong> {{ quiz.title }}</p>
-        </div>
-        <div class="score">
-            Score obtenu : {{ score.score_final }}/{{ total }}
-        </div>
-
-        <a href="{% url 'home' %}" class="btn-retour">Retour à l'accueil</a>
-    </div>
-
-    {% for user_answer in user_answers %}
-    <div class="d-flex justify-content-center">
-  <div class="card mb-4 w-50 shadow bg-white bg-opacity-10 border border-white border-opacity-25 text-white">
-    <div class="card-body">
-      <h5 class="card-title text-center fw-bold fs-5">{{user_answer.question.question_text}}</h5>
-      <input type="hidden" name="idQuiz" value="1">
-  
-      <div class="form-check mb-2">
-        <input class="form-check-input "
-        {% if user_answer.user_answer == 1  %}
-        checked
-        {% endif %}
-        style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="1" id="{{question.id}}option1" required>
-        <label class="form-check-label" for="{{question.id}}option1">{{ user_answer.question.reponse_1 }}</label>
-      </div>
-  
-      <div class="form-check mb-2">
-        <input class="form-check-input"
-        {% if user_answer.user_answer == 2  %}
-        checked
-        {% endif %}
-        style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="2" id="{{question.id}}option2" required>
-        <label class="form-check-label" for="{{question.id}}option2">{{user_answer.question.reponse_2 }}</label>
-      </div>
-  
-      <div class="form-check mb-2">
-        <input class="form-check-input"
-        {% if user_answer.user_answer == 3  %}
-        checked
-        {% endif %}
-        style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="3" id="{{question.id}}option3" required>
-        <label class="form-check-label" for="{{question.id}}option3">{{ user_answer.question.reponse_3 }}</label>
-      </div>
-  
-      <div class="form-check mb-2">
-        <input class="form-check-input"
-        {% if user_answer.user_answer == 4  %}
-        checked
-        {% endif %}
-        style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="4" id="{{question.id}}option4" required>
-        <label class="form-check-label" for="{{question.id}}option4">{{ user_answer.question.reponse_4 }}</label>
-      </div>
-      <div class="form-check mb-2">
-        
-        <p>{{user_answer.question.bonne_reponse}}</p>  
-      </div>
-    </div>
+<div class="result-container">
+  <h2>Résultat du Quiz</h2>
+  <div class="details mb-4">
+    <p><strong>Participant :</strong> {{ user.first_name }} {{ user.last_name }}</p>
+    <p><strong>Date de participation :</strong> {{ score.date_participation|date:"d M Y H:i" }}</p>
+    <p><strong>Quiz passé :</strong> {{ quiz.title }}</p>
   </div>
-<br>  
+  <div class="score">
+    Score obtenu : {{ score.score_final }}/{{ total }}
+  </div>
+
+  <a href="{% url 'home' %}" class="btn-retour">Retour à l'accueil</a>
 </div>
-  {% endfor %}
 
+{% for user_answer in user_answers %}
+<div class="result-container">
+  <h5 class="fw-bold">{{ user_answer.question.question_text }}</h5>
+  <ul class="answer-list">
+    <li class="{% if user_answer.user_answer == 1 %}checked-answer{% endif %}">{{ user_answer.question.reponse_1 }}</li>
+    <li class="{% if user_answer.user_answer == 2 %}checked-answer{% endif %}">{{ user_answer.question.reponse_2 }}</li>
+    <li class="{% if user_answer.user_answer == 3 %}checked-answer{% endif %}">{{ user_answer.question.reponse_3 }}</li>
+    <li class="{% if user_answer.user_answer == 4 %}checked-answer{% endif %}">{{ user_answer.question.reponse_4 }}</li>
+  </ul>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+  <p class="correct-answer">
+    Bonne réponse : 
+    {% if user_answer.question.bonne_reponse == 1 %}
+      {{ user_answer.question.reponse_1 }}
+    {% elif user_answer.question.bonne_reponse == 2 %}
+      {{ user_answer.question.reponse_2 }}
+    {% elif user_answer.question.bonne_reponse == 3 %}
+      {{ user_answer.question.reponse_3 }}
+    {% elif user_answer.question.bonne_reponse == 4 %}
+      {{ user_answer.question.reponse_4 }}
+    {% endif %}
+    <span class="icon">✔️</span>
+  </p>
+
+  <p class="user-answer {% if user_answer.user_answer == user_answer.question.bonne_reponse %}correct{% else %}wrong{% endif %}">
+    Votre réponse : 
+    {% if user_answer.user_answer == 1 %}
+      {{ user_answer.question.reponse_1 }}
+    {% elif user_answer.user_answer == 2 %}
+      {{ user_answer.question.reponse_2 }}
+    {% elif user_answer.user_answer == 3 %}
+      {{ user_answer.question.reponse_3 }}
+    {% elif user_answer.user_answer == 4 %}
+      {{ user_answer.question.reponse_4 }}
+    {% else %}
+      (Aucune réponse)
+    {% endif %}
+    <span class="icon">{% if user_answer.user_answer == user_answer.question.bonne_reponse %}✔️{% else %}❌{% endif %}</span>
+  </p>
+</div>
+{% endfor %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
