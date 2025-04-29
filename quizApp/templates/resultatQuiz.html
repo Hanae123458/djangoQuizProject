@@ -95,59 +95,79 @@
 </head>
 <body>
 
-<div class="result-container">
-  <h2>Résultat du Quiz</h2>
-  <div class="details mb-4">
-    <p><strong>Participant :</strong> {{ user.first_name }} {{ user.last_name }}</p>
-    <p><strong>Date de participation :</strong> {{ score.date_participation|date:"d M Y H:i" }}</p>
-    <p><strong>Quiz passé :</strong> {{ quiz.title }}</p>
-  </div>
-  <div class="score">
-    Score obtenu : {{ score.score_final }}/{{ total }}
-  </div>
+    <div class="result-container">
+        <h2>Résultat du Quiz</h2>
+        <div class="details">
+            <p><strong>Participant :</strong> {{ user.first_name }} {{ user.last_name }}</p>
+            <p><strong>Date de participation :</strong> {{ score.date_participation|date:"d M Y H:i" }}</p>
+            <p><strong>Quiz passé :</strong> {{ quiz.title }}</p>
+        </div>
+        <div class="score">
+            Score obtenu : {{ score.score_final }}/{{ total }}
+        </div>
 
-  <a href="{% url 'home' %}" class="btn-retour">Retour à l'accueil</a>
-</div>
+        <a href="{% url 'home' %}" class="btn-retour">Retour à l'accueil</a>
+    </div>
 
-{% for user_answer in user_answers %}
-<div class="result-container">
-  <h5 class="fw-bold">{{ user_answer.question.question_text }}</h5>
-  <ul class="answer-list">
-    <li class="{% if user_answer.user_answer == 1 %}checked-answer{% endif %}">{{ user_answer.question.reponse_1 }}</li>
-    <li class="{% if user_answer.user_answer == 2 %}checked-answer{% endif %}">{{ user_answer.question.reponse_2 }}</li>
-    <li class="{% if user_answer.user_answer == 3 %}checked-answer{% endif %}">{{ user_answer.question.reponse_3 }}</li>
-    <li class="{% if user_answer.user_answer == 4 %}checked-answer{% endif %}">{{ user_answer.question.reponse_4 }}</li>
-  </ul>
+    {% for user_answer in user_answers %}
+    <div class="d-flex justify-content-center">
+  <div class="card mb-4 w-50 shadow bg-white bg-opacity-10 border border-white border-opacity-25 text-white">
+    <div class="card-body">
+      <h5 class="card-title text-center fw-bold fs-5">{{user_answer.question.question_text}}</h5>
+      <input disabled type="hidden" name="idQuiz" value="1">
+  
+      <div class="form-check mb-2">
+        <input class="form-check-input"
+        {% if user_answer.user_answer == 1 %}
+        
+        {% endif %}
+        style="transform: scale(1.2); {% if 1 == user_answer.question.bonne_reponse %}background-color: green;{% elif user_answer.user_answer == 1 %}background-color: red;{% endif %}" type="radio" name="{{user_answer.question.id}}" value="1" id="{{user_answer.question.id}}option1" required>
+        <label class="form-check-label" for="{{user_answer.question.id}}option1">{{ user_answer.question.reponse_1 }}</label>
+      </div>
 
-  <p class="correct-answer">
-    Bonne réponse : 
-    {% if user_answer.question.bonne_reponse == 1 %}
-      {{ user_answer.question.reponse_1 }}
-    {% elif user_answer.question.bonne_reponse == 2 %}
-      {{ user_answer.question.reponse_2 }}
-    {% elif user_answer.question.bonne_reponse == 3 %}
-      {{ user_answer.question.reponse_3 }}
-    {% elif user_answer.question.bonne_reponse == 4 %}
-      {{ user_answer.question.reponse_4 }}
-    {% endif %}
-    <span class="icon">✔️</span>
-  </p>
+      <div class="form-check mb-2">
+        <input disabled class="form-check-input"
+        style="transform: scale(1.2); 
+        {% if 2 == user_answer.question.bonne_reponse %}
+        background-color: green;
+        {% elif user_answer.user_answer == 2 %}
+        background-color: red;
+        {% endif %}" type="radio" name="{{user_answer.question.id}}"
+        value="2" id="{{user_answer.question.id}}option2" required>
+        <label class="form-check-label" for="{{user_answer.question.id}}option2">{{ user_answer.question.reponse_2 }}</label>
+      </div>
 
-  <p class="user-answer {% if user_answer.user_answer == user_answer.question.bonne_reponse %}correct{% else %}wrong{% endif %}">
-    Votre réponse : 
-    {% if user_answer.user_answer == 1 %}
-      {{ user_answer.question.reponse_1 }}
-    {% elif user_answer.user_answer == 2 %}
-      {{ user_answer.question.reponse_2 }}
-    {% elif user_answer.user_answer == 3 %}
-      {{ user_answer.question.reponse_3 }}
-    {% elif user_answer.user_answer == 4 %}
-      {{ user_answer.question.reponse_4 }}
+      <div class="form-check mb-2">
+        <input disabled class="form-check-input"
+        {% if user_answer.user_answer == 3 %}
+        
+        {% endif %}
+        style="transform: scale(1.2); {% if 3 == user_answer.question.bonne_reponse %}background-color: green;{% elif user_answer.user_answer == 3 %}background-color: red;{% endif %}" type="radio" name="{{user_answer.question.id}}" value="3" id="{{user_answer.question.id}}option3" required>
+        <label class="form-check-label" for="{{user_answer.question.id}}option3">{{ user_answer.question.reponse_3 }}</label>
+      </div>
+
+      <div class="form-check mb-2">
+        <input disabled class="form-check-input"
+        {% if user_answer.user_answer == 4 %}
+        
+        {% endif %}
+        style="transform: scale(1.2); {% if 4 == user_answer.question.bonne_reponse %}background-color: green;{% elif user_answer.user_answer == 4 %}background-color: red;{% endif %}" type="radio" name="{{user_answer.question.id}}" value="4" id="{{user_answer.question.id}}option4" required>
+        <label class="form-check-label" for="{{user_answer.question.id}}option4">{{ user_answer.question.reponse_4 }}</label>
+      </div>
+      <div class="form-check mb-2">
+        
+        <div class="text-center"></div>
+    {% if user_answer.user_answer == user_answer.question.bonne_reponse %}
+        <p class="text-success fw-bold">🎉Bonne réponse !</p>
     {% else %}
-      (Aucune réponse)
+        <p class="text-danger fw-bold">😢Mauvaise réponse.</p>
     {% endif %}
-    <span class="icon">{% if user_answer.user_answer == user_answer.question.bonne_reponse %}✔️{% else %}❌{% endif %}</span>
-  </p>
+</div>
+      </div>
+    </div>
+  </div>
+<br>  
+
 </div>
 {% endfor %}
 
