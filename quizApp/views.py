@@ -10,7 +10,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 
 
-
 User = get_user_model()
 
 class home(View):
