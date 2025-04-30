@@ -8,6 +8,9 @@ from .models import Score
 import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
+from django.http import HttpResponse
+from django.views.generic.edit import FormView
+from .forms import QuizForm
 
 
 User = get_user_model()
@@ -89,8 +92,14 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
                                                     "user_answers":user_answers
                                                     })
 
+class CreateQuizView(LoginRequiredMixin, FormView):
+    template_name = 'create_quiz.html'
+    form_class = QuizForm
 
-
+    def form_valid(self, form):
+        quiz = form.save(commit=False)
+        quiz.save()
+        return HttpResponse('Quiz créé avec succès !')
 
 class profile(LoginRequiredMixin, View):
     def get(self, request):

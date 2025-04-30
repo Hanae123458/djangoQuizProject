@@ -1,6 +1,7 @@
 from django import forms
 from .models import Categorie
 from .models import Participant
+from .models import Quiz
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 
@@ -22,3 +23,8 @@ class QuizCategoryForm(forms.Form):
         empty_label="Sélectionnez une catégorie",
         widget=forms.Select(attrs={'categorie': 'form-control'})
     )
+
+class QuizForm(forms.ModelForm):
+    class Meta:
+        model = Quiz
+        fields = ['title', 'description', 'type_quiz']
