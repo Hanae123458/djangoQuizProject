@@ -124,3 +124,22 @@ class question(View):
             reponse_4 = request.reponse_4,
             bonne_reponse = request.bonne_reponse
         )
+class StatisticsView(LoginRequiredMixin, View):
+    def get(self, request):
+        user = request.user
+        scores = Score.objects.filter(participant=user).order_by('date_participation')
+        return render(request, 'statistics.html', {
+            'scores': scores
+        })
+
+class question(View):
+    def post(self, request):
+        Question.objects.create(
+            quiz = Quiz.objects.get(id = request.quiz),
+            question_text = request.text,
+            reponse_1 = request.reponse_1,
+            reponse_2 = request.reponse_2,
+            reponse_3 = request.reponse_3,
+            reponse_4 = request.reponse_4,
+            bonne_reponse = request.bonne_reponse
+        )
