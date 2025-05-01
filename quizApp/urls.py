@@ -7,4 +7,5 @@ urlpatterns=[
                 path('results/', views.validerReponsesQuiz.as_view() , name='resultatQuiz'),
                 path('choice/', views.quizChoice.as_view(), name='quizPage'),
                 path('addQuestion/', views.question.as_view(), name="addQuestion"),
+                path('create_quiz/', views.CreateQuizView.as_view(), name='create_quiz'),
             ]

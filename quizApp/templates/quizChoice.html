@@ -10,15 +10,13 @@
       background: linear-gradient(135deg, #667eea, #764ba2);
       font-family: 'Poppins', sans-serif;
       color: #fff;
-      
-      min-height: 100vh;
+      margin: 0;
     }
 
     .navbar {
-      background-color: rgba(255, 255, 255, 0.15) !important;
+      background-color: rgba(255, 255, 255, 0.1) !important;
       backdrop-filter: blur(10px);
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-      margin-bottom: 2rem;
     }
 
     .navbar-brand, .nav-link {
@@ -33,7 +31,7 @@
 
     .quiz-container {
       max-width: 800px;
-      margin: 0 auto;
+      margin: 3rem auto; /* Ajout d'un espace en haut et en bas */
       background: rgba(255, 255, 255, 0.1);
       border-radius: 15px;
       padding: 2rem 3rem;
@@ -41,6 +39,7 @@
       backdrop-filter: blur(8.5px);
       border: 1px solid rgba(255, 255, 255, 0.18);
     }
+
 
     h1 {
       text-align: center;
@@ -59,7 +58,7 @@
     }
 
     .quiz-card {
-      background: rgba(255, 255, 255, 0.2);
+      background: #fed800a0;
       padding: 1rem 1.5rem;
       border-radius: 12px;
       margin-bottom: 1rem;
@@ -94,49 +93,59 @@
         font-size: 1.2rem;
       }
     }
+    footer {
+      background-color: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+      color: white;
+      text-align: center;
+      padding: 0.7rem 0;
+    }
   </style>
 </head>
 <body>
 
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container">
-      <a class="navbar-brand" href="{% url 'home' %}">QuizApp</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent">
+      <a class="navbar-brand fw-bold" href="{% url 'home' %}"><i class="fas fa-brain me-2"></i>QuizApp</a>
+      <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link active" href="{% url 'home' %}">Accueil</a>
-          </li>
-          
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Accueil</a></li>
+       
+          <li class="nav-item"><a class="nav-link " href="{% url 'quizPage' %}">QuizPage</a></li>
         </ul>
+       
         <div>
-            {% if user.is_authenticated %}
-              <div class="d-inline">
-                <form action="{% url 'logout' %}" method="post" class="d-inline">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-outline-light me-2">Déconnexion</button>
-                </form>
-                <a href="{% url 'profile'%}" class="me-2">
-                  {% if user.profile_picture %}
-                    <img src="{{ user.profile_picture.url }}" alt="Profil" class="rounded-circle" style="width: 40px;
+          {% if user.is_authenticated %}
+          <div class="d-inline">
+            <form action="{% url 'logout' %}" method="post" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-light me-2">Déconnexion</button>
+            </form>
+            <a href="{%url 'profile'%}" class="me-2">
+                {% if user.profile_picture %}
+                <img src="{{ user.profile_picture.url }}" alt="Profil" class="rounded-circle" style="width: 40px;
+                height: 40px;
+                object-fit: cover;
+                margin-right: 10px;
+                border: 4px solid purple;">
+                {% else %}{% load static %}
+
+                    <img src="{% static 'images/default_profile.jpg ' %}" alt="Profil" class="rounded-circle" style="width: 40px;
                     height: 40px;
                     object-fit: cover;
                     margin-right: 10px;
                     border: 4px solid purple;">
-                    {% else %}
-                    <div class="rounded-circle h-40 w-40 bg-gray" ></div>
-                    {% endif %}
-                </a>
-              
-              </div>
-            {% else %}
-              <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Connexion</a>
-              <a href="{% url 'signup' %}" class="btn btn-main">Inscription</a>
-            {% endif %}
-            
-          </div>
+                  </a>
+                </div>
+              {% endif %}
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Connexion</a>
+          <a href="{% url 'signup' %}" class="btn btn-main">Inscription</a>
+        {% endif %}
+        
       </div>
     </div>
   </nav>
@@ -169,8 +178,13 @@
       {% endfor %}
     {% endfor %}
   </div>
+  <!-- Footer -->
+<footer>
+  <div class="container">
+    <p class="mb-0">© 2025 QuizApp. Votre savoir, notre mission.</p>
+  </div>
+</footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   <script>
     document.getElementById('categoryFilter').addEventListener('change', function() {
       const selectedCategory = this.value;
@@ -192,5 +206,6 @@
       });
     });
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
