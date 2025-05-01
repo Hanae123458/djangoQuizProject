@@ -6,6 +6,8 @@ from .forms import QuizCategoryForm
 from .models import Quiz, Categorie, Question
 from .models import Score
 import datetime
+import json
+from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.http import HttpResponse
@@ -71,6 +73,7 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
         user_answers = []
         for question in questions:
             user_answer = request.POST.get(str(question.id))
+            print(str(question.id))
             user_answers.append({"question" : question,
                                 "user_answer" : int(user_answer)})
             if user_answer and int(user_answer) == question.bonne_reponse:
@@ -99,11 +102,16 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
 class CreateQuizView(LoginRequiredMixin, FormView):
     template_name = 'create_quiz.html'
     form_class = QuizForm
+    
 
     def form_valid(self, form):
         quiz = form.save(commit=False)
+        quiz.creator = self.request.user
         quiz.save()
-        return HttpResponse('Quiz créé avec succès !')
+        return render(self.request , 'add_questions.html', {
+            "user": self.request.user,
+            "quiz":quiz
+        })
 
 class profile(LoginRequiredMixin, View):
     def get(self, request):
@@ -115,12 +123,25 @@ class profile(LoginRequiredMixin, View):
 
 class question(View):
     def post(self, request):
-        Question.objects.create(
-            quiz = Quiz.objects.get(id = request.quiz),
-            question_text = request.text,
-            reponse_1 = request.reponse_1,
-            reponse_2 = request.reponse_2,
-            reponse_3 = request.reponse_3,
-            reponse_4 = request.reponse_4,
-            bonne_reponse = request.bonne_reponse
-        )
+        try:
+            data = json.loads(request.body) 
+            qID = int(data.get('quizID'))
+
+            quiz = Quiz.objects.get(id=qID)
+
+            Question.objects.create(
+                quiz=quiz,
+                question_text=data.get('question_text'),
+                reponse_1=data.get('reponse_1'),
+                reponse_2=data.get('reponse_2'),
+                reponse_3=data.get('reponse_3'),
+                reponse_4=data.get('reponse_4'),
+                bonne_reponse=data.get('bonne_reponse'),
+            )
+
+            return JsonResponse({'status': 'success'})
+
+        except Quiz.DoesNotExist:
+            return JsonResponse({'error': 'Quiz not found'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)

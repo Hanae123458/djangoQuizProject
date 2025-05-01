@@ -176,7 +176,7 @@
   <div class="card mb-4 w-50 shadow bg-white bg-opacity-10 border border-white border-opacity-25 text-white">
     <div class="card-body">
       <h5 class="card-title text-center fw-bold fs-5">{{question.question_text}}</h5>
-      <input type="hidden" name="idQuiz" value="1">
+      <input type="hidden" name="idQuiz" value="{{quiz.id}}">
   
       <div class="form-check mb-2">
         <input class="form-check-input " style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="1" id="{{question.id}}option1" required>
