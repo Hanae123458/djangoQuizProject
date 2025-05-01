@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques des Scores</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 40px;
+        }
+        
+        .stats-summary {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            min-width: 200px;
+            text-align: center;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-card h3 {
+            margin-top: 0;
+            font-weight: 400;
+            font-size: 1rem;
+        }
+        
+        .stat-card p {
+            font-size: 1.8rem;
+            margin-bottom: 0;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .chart-container {
+                height: 300px;
+            }
+            
+            .stat-card {
+                min-width: 150px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Statistiques des Scores</h1>
+        
+        <div class="stats-summary">
+            <div class="stat-card">
+                <h3>Score Moyen</h3>
+                <p>{{ average_score|floatformat:1 }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Score Maximal</h3>
+                <p>{{ max_score }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Score Minimal</h3>
+                <p>{{ min_score }}</p>
+            </div>
+            <div class="stat-card">
+                <h3>Total Tentatives</h3>
+                <p>{{ scores|length }}</p>
+            </div>
+        </div>
+        
+        <div class="chart-container">
+            <canvas id="scoreChart"></canvas>
+        </div>
+    </div>
+
+    <script>
+        const ctx = document.getElementById('scoreChart').getContext('2d');
+        const scoreData = {
+            labels: [
+                {% for score in scores %}
+                    '{{ score.date_participation|date:"d M Y" }}'{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                label: 'Score Final',
+                data: [
+                    {% for score in scores %}
+                        {{ score.score_final }},
+                    {% endfor %}
+                ],
+                backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                borderColor: 'rgba(99, 102, 241, 1)',
+                borderWidth: 2,
+                tension: 0.3,
+                pointBackgroundColor: 'rgba(99, 102, 241, 1)',
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                fill: true
+            }]
+        };
+
+        const config = {
+            type: 'line',
+            data: scoreData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Évolution des Scores',
+                        font: {
+                            size: 18
+                        }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    legend: {
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Points'
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'nearest'
+                }
+            }
+        };
+
+        new Chart(ctx, config);
+    </script>
+</body>
+</html>

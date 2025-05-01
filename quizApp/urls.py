@@ -1,5 +1,6 @@
 from . import views
 from django.urls import path
+from .views import StatisticsView
 
 urlpatterns=[
                 path('', views.quizPage.as_view(), name='quizPageOld'),
@@ -8,4 +9,5 @@ urlpatterns=[
                 path('choice/', views.quizChoice.as_view(), name='quizPage'),
                 path('addQuestion/', views.question.as_view(), name="addQuestion"),
                 path('create_quiz/', views.CreateQuizView.as_view(), name='create_quiz'),
+                path('statistics/', StatisticsView.as_view(), name='statistics'),
             ]
