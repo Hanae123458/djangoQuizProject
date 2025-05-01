@@ -11,6 +11,7 @@ from django.views import View
 from django.http import HttpResponse
 from django.views.generic.edit import FormView
 from .forms import QuizForm
+from django.db.models import Avg, Max, Min
 
 
 User = get_user_model()
@@ -128,8 +129,15 @@ class StatisticsView(LoginRequiredMixin, View):
     def get(self, request):
         user = request.user
         scores = Score.objects.filter(participant=user).order_by('date_participation')
+        average_score = scores.aggregate(Avg('score_final'))['score_final__avg'] or 0
+        max_score = scores.aggregate(Max('score_final'))['score_final__max'] or 0
+        min_score = scores.aggregate(Min('score_final'))['score_final__min'] or 0
+
         return render(request, 'statistics.html', {
-            'scores': scores
+            'scores': scores,
+            'average_score': average_score,
+            'max_score': max_score,
+            'min_score': min_score
         })
 
 class question(View):
