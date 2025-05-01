@@ -3,7 +3,7 @@ from django.contrib.auth import login, get_user_model
 from django.contrib import messages
 from .forms import SignUpForm
 from .forms import QuizCategoryForm
-from .models import Quiz, Categorie
+from .models import Quiz, Categorie, Question
 from .models import Score
 import datetime
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -51,6 +51,8 @@ class quizChoice(LoginRequiredMixin, View):
 class quizCommence(LoginRequiredMixin, View):
     def get(self, request, quiz_id):
         quiz = get_object_or_404(Quiz, id=quiz_id)
+        quiz.times_visited+=1
+        quiz.save()
         questions = quiz.question_set.all()
         return render(request, 'quizCommence.html', {'quiz': quiz, 'questions': questions})
 
@@ -58,6 +60,8 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
     def post(self, request):
         idQuiz = request.POST.get("idQuiz")
         quiz = Quiz.objects.get(id=idQuiz)
+        quiz.times_played+=1
+        quiz.save()
         questions = quiz.question_set.all()
 
         score = 0
@@ -99,3 +103,15 @@ class profile(LoginRequiredMixin, View):
         scores = scores[:5:-1] if len(scores) > 5 else scores[::-1]
         return render(request, 'profile.html', {'user': user,
                                                 'scores': scores})
+
+class question(View):
+    def post(self, request):
+        Question.objects.create(
+            quiz = Quiz.objects.get(id = request.quiz),
+            question_text = request.text,
+            reponse_1 = request.reponse_1,
+            reponse_2 = request.reponse_2,
+            reponse_3 = request.reponse_3,
+            reponse_4 = request.reponse_4,
+            bonne_reponse = request.bonne_reponse
+        )

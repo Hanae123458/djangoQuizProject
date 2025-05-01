@@ -4,10 +4,16 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
 class Participant(AbstractUser):
-    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True)
+    profile_picture = models.ImageField(
+        upload_to='profile_pictures/', 
+        blank=True, 
+        null=True, 
+        default='profile_pictures/default_profile.jpg'
+    )
     level = models.IntegerField(default=1)
     xp = models.IntegerField(default=0)
     bio = models.TextField(max_length=500, blank=True, null=True)
+    is_admin = models.BooleanField(blank=False, null=False, default=False)
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -21,9 +27,12 @@ class Quiz(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     type_quiz = models.ForeignKey(Categorie,on_delete=models.CASCADE)
+    creator = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='quizzes')
+    times_played = models.IntegerField(default=0)
+    times_visited = models.IntegerField(default=0)
     def __str__(self):
         return self.title
-     
+    
 class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     question_text = models.CharField(max_length=255)
