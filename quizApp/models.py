@@ -14,7 +14,7 @@ class Participant(AbstractUser):
     level = models.IntegerField(default=1)
     xp = models.IntegerField(default=0)
     bio = models.TextField(max_length=500, blank=True, null=True)
-    is_admin = models.BooleanField(blank=False, null=False, default=False)
+    is_creator = models.BooleanField(blank=False, null=False, default=False)
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -41,12 +41,16 @@ class Quiz(models.Model):
         return self.title
 
 class Question(models.Model):
+<<<<<<< HEAD
     TYPE_CHOICES = [
         ('QCM', 'QCM'),
         ('VF', 'Vrai/Faux'),
         ('RC', 'Réponse courte'),
     ]
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+=======
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
+>>>>>>> 3aa48b4ad16bbecfa791ac52558a1dd0656aaa0c
     question_text = models.CharField(max_length=255)
     type_question = models.CharField(max_length=3, choices=TYPE_CHOICES, default='VF')
     reponse_1 = models.CharField(max_length=255)
@@ -74,10 +78,18 @@ class Question(models.Model):
     
 
 class Score(models.Model):
-    participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
+    participant = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='scores')
     score_final = models.IntegerField()
     date_participation = models.DateField(default=timezone.now)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='scores')
 
     def __str__(self):
         return f"{self.participant} {self.score_final}/{self.quiz.question_set.count()}"
+    
+class Question_history(models.Model):
+    question = models.ForeignKey(Question, on_delete= models.CASCADE, related_name= 'history')
+    user_answer = models.CharField(max_length=255)
+    user = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='history')
+    time = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return f'{self.question} - {self.user} - {self.time}'

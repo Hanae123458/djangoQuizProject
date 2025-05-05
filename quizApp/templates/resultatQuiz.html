@@ -133,7 +133,7 @@
         <ul class="navbar-nav me-auto">
           <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Accueil</a></li>
        
-          <li class="nav-item"><a class="nav-link " href="{% url 'quizPage' %}">QuizPage</a></li>
+          <li class="nav-item"><a class="nav-link " href="{% url 'quizPage' %}">Jouer</a></li>
         </ul>
        
         <div>
@@ -179,7 +179,10 @@
     Score obtenu : {{ score.score_final }}/{{ total }}
   </div>
 
-  <a href="{% url 'home' %}" class="btn-retour">Retour à l'accueil</a>
+  <div class="d-flex justify-content-center gap-3">
+    <a href="{% url 'home' %}" class="btn-retour">Retour à l'accueil</a>
+    <a href="{% url 'quizCommence' quiz.id %}" class="btn-retour">Rejouer</a>
+  </div>
 </div>
 
 {% for user_answer in user_answers %}

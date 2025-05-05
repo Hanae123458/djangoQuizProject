@@ -3,7 +3,7 @@ from django.contrib.auth import login, get_user_model
 from django.contrib import messages
 from .forms import SignUpForm
 from .forms import QuizCategoryForm
-from .models import Quiz, Categorie, Question
+from .models import Quiz, Categorie, Question, Question_history
 from .models import Score
 import datetime
 import json
@@ -83,6 +83,12 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
         user_answers = []
         for question in questions:
             user_answer = request.POST.get(str(question.id))
+            history = Question_history.objects.create(
+                question = question,
+                user_answer = user_answer,
+                user = request.user
+            )
+            history.save()
             print(str(question.id))
             user_answers.append({"question" : question,
                                 "user_answer" : int(user_answer)})
@@ -171,3 +177,25 @@ class question(View):
             return JsonResponse({'error': 'Quiz not found'}, status=404)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+
+
+class question_stats(View):
+    def get(self, request, quizID):
+        quiz = Quiz.objects.get(id = quizID)
+        data = []
+        questions = quiz.questions.all()
+        for question in questions : 
+            answers = question.history.all()
+            right_answers = 0
+            for answer in answers : 
+                if answer.user_answer == str(question.bonne_reponse) : 
+                    right_answers+=1
+            data.append({
+                'text' : question.question_text,
+                'right_answers': right_answers,
+                'bad_answers' : len(answers)-right_answers,
+                'proportion':round((right_answers/len(answers))*100, 0) or '_'
+            })
+        return render(request, 'question_stats.html', {
+            'questions':data
+        })
