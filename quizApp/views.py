@@ -45,14 +45,23 @@ class quizPage(LoginRequiredMixin, View):
 class quizChoice(LoginRequiredMixin, View):
     def get(self, request):
         type_quiz = request.GET.get('categorie')
-        categories = Categorie.objects.prefetch_related('quiz_set')
+        difficulte = request.GET.get('difficulte')
+
+        categories = Categorie.objects.all()
+        quiz = Quiz.objects.all()
+
         if type_quiz:
-            quiz = Quiz.objects.filter(type_quiz__type_quiz=type_quiz)
-        else:
-            quiz = Quiz.objects.all()
-        return render(request, 'quizChoice.html', {'quiz': quiz,
-                                                    'categories': categories,
-                                                    'type_quiz': type_quiz})
+            quiz = quiz.filter(type_quiz__type_quiz=type_quiz)
+        if difficulte:
+            quiz = quiz.filter(difficulte=difficulte)
+
+        return render(request, 'quizChoice.html', {
+            'quiz': quiz,
+            'categories': categories,
+            'type_quiz': type_quiz,
+            'difficulte': difficulte,
+        })
+
 
 class quizCommence(LoginRequiredMixin, View):
     def get(self, request, quiz_id):

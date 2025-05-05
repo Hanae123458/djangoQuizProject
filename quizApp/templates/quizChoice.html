@@ -31,7 +31,7 @@
 
     .quiz-container {
       max-width: 800px;
-      margin: 3rem auto; /* Ajout d'un espace en haut et en bas */
+      margin: 3rem auto;
       background: rgba(255, 255, 255, 0.1);
       border-radius: 15px;
       padding: 2rem 3rem;
@@ -39,7 +39,6 @@
       backdrop-filter: blur(8.5px);
       border: 1px solid rgba(255, 255, 255, 0.18);
     }
-
 
     h1 {
       text-align: center;
@@ -58,19 +57,19 @@
     }
 
     .quiz-card {
-      background: #fed800a0;
+      background: #f3fe94;
+      color: #333 !important;
       padding: 1rem 1.5rem;
-      border-radius: 12px;
       margin-bottom: 1rem;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      transition: transform 0.2s ease, background-color 0.3s ease;
+      border-radius: 12px;
+      transition: all 0.3s ease;
     }
 
     .quiz-card:hover {
-      background: #ffd700;
-      color: #333;
+      background: #efff64;
+      color: #333 !important;
       transform: scale(1.03);
-      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 6px 12px  #efff64;
     }
 
     .quiz-card a {
@@ -78,6 +77,15 @@
       text-decoration: none;
       font-weight: 600;
       display: block;
+    }
+
+    .titles{
+      color: #0096d1; /* Violet foncé pour les libellés */
+      font-weight: bold;
+    }
+
+    .value {
+      color:  #333 !important; /* Blanc ou autre couleur contrastée */
     }
 
     @media (max-width: 768px) {
@@ -93,6 +101,7 @@
         font-size: 1.2rem;
       }
     }
+
     footer {
       background-color: rgba(0, 0, 0, 0.3);
       backdrop-filter: blur(5px);
@@ -113,10 +122,8 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Accueil</a></li>
-       
-          <li class="nav-item"><a class="nav-link " href="{% url 'quizPage' %}">QuizPage</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'quizPage' %}">QuizPage</a></li>
         </ul>
-       
         <div>
           {% if user.is_authenticated %}
           <div class="d-inline">
@@ -125,87 +132,110 @@
               <button type="submit" class="btn btn-outline-light me-2">Déconnexion</button>
             </form>
             <a href="{%url 'profile'%}" class="me-2">
-                {% if user.profile_picture %}
-                <img src="{{ user.profile_picture.url }}" alt="Profil" class="rounded-circle" style="width: 40px;
-                height: 40px;
-                object-fit: cover;
-                margin-right: 10px;
-                border: 4px solid purple;">
-                {% else %}{% load static %}
-
-                    <img src="{% static 'images/default_profile.jpg ' %}" alt="Profil" class="rounded-circle" style="width: 40px;
-                    height: 40px;
-                    object-fit: cover;
-                    margin-right: 10px;
-                    border: 4px solid purple;">
-                </div>
-                {% endif %}
-              </a>
-        {% else %}
+              {% if user.profile_picture %}
+                <img src="{{ user.profile_picture.url }}" alt="Profil" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px; border: 4px solid purple;">
+              {% else %}
+                {% load static %}
+                <img src="{% static 'images/default_profile.jpg' %}" alt="Profil" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px; border: 4px solid purple;">
+              {% endif %}
+            </a>
+          </div>
+          {% else %}
           <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Connexion</a>
           <a href="{% url 'signup' %}" class="btn btn-main">Inscription</a>
-        {% endif %}
-        
+          {% endif %}
+        </div>
       </div>
     </div>
   </nav>
 
   <div class="quiz-container">
     <h1>Choisissez un quiz</h1>
+    <div class="mb-3 text-center">
 
-    <div class="mb-3">
       <label for="categoryFilter" class="form-label fw-bold">Filtrer par catégorie :</label>
-    <select id="categoryFilter" class="form-select form-select-sm rounded-pill shadow-sm text-center w-50 mx-auto" style="background-color:rgba(255, 255, 255, 0.1); color: #fff;">
-      <option value="all">Toutes les catégories</option>
-      {% for categorie in categories %}
-        <option  value="{{ categorie.type_quiz|slugify }}" style="color: #333;">
-            {{ categorie.type_quiz }}
-        </option>
-      {% endfor %}
-    </select>
+      <select id="categoryFilter" class="form-select form-select-sm rounded-pill shadow-sm text-center w-50 mx-auto mb-3" style="background-color:rgba(134, 251, 247, 0.832); color: #333;">
+        <option value="all">Toutes les catégories</option>
+        {% for categorie in categories %}
+          <option value="{{ categorie.type_quiz|slugify }}" style="color: #333;">{{ categorie.type_quiz }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="difficultyFilter" class="form-label fw-bold mt-2">Filtrer par difficulté :</label>
+      <select id="difficultyFilter" class="form-select form-select-sm rounded-pill shadow-sm text-center w-50 mx-auto" style="background-color:rgba(134, 251, 247, 0.832); color: #333;">
+        <option style="color: #333;" value="all">Toutes les difficultés</option>
+        <option style="color: #333;" value="facile">Facile</option>
+        <option style="color: #333;" value="moyen">Moyen</option>
+        <option style="color: #333;" value="difficile">Difficile</option>
+
+      </select>
     </div>
 
     {% csrf_token %}
     {% for categorie in categories %}
       <div class="category-title category-group" data-category="{{ categorie.type_quiz|slugify }}">{{ categorie.type_quiz }}</div>
       {% for quiz in categorie.quiz_set.all %}
-        <div class="quiz-card" data-category="{{ categorie.type_quiz|slugify }}">
-          <a href="{% url 'quizCommence' quiz.id %}">
-            {{ quiz.title }} <br>
-            <small>{{ quiz.description }}</small>
-          </a>
-        </div>
+      <div class="quiz-card" data-category="{{ categorie.type_quiz|slugify }}" data-difficulty="{{ quiz.difficulte|lower }}">
+        <a href="{% url 'quizCommence' quiz.id %}">
+          <span class="titles">Titre:</span>
+          <span class="value">{{ quiz.title }}</span> <br>
+      
+          <small>
+            <span class="titles">Description:</span>
+            <span class="value">{{ quiz.description }}</span>
+          </small><br>
+      
+          <small>
+            <span class="titles">Difficulté:</span>
+            <span class="value">{{ quiz.difficulte }}</span>
+          </small>
+        </a>
+      </div>
+      
       {% endfor %}
     {% endfor %}
   </div>
-  <!-- Footer -->
-<footer>
-  <div class="container">
-    <p class="mb-0">© 2025 QuizApp. Votre savoir, notre mission.</p>
-  </div>
-</footer>
+
+  <footer>
+    <div class="container">
+      <p class="mb-0">© 2025 QuizApp. Votre savoir, notre mission.</p>
+    </div>
+  </footer>
 
   <script>
-    document.getElementById('categoryFilter').addEventListener('change', function() {
-      const selectedCategory = this.value;
+    const categoryFilter = document.getElementById('categoryFilter');
+    const difficultyFilter = document.getElementById('difficultyFilter');
+
+    function filterQuizzes() {
+      const selectedCategory = categoryFilter.value;
+      const selectedDifficulty = difficultyFilter.value;
       const quizCards = document.querySelectorAll('.quiz-card');
       const categoryGroups = document.querySelectorAll('.category-group');
 
       quizCards.forEach(card => {
-        if (selectedCategory === 'all' || card.dataset.category === selectedCategory) {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
+        const matchesCategory = selectedCategory === 'all' || card.dataset.category === selectedCategory;
+        const matchesDifficulty = selectedDifficulty === 'all' || card.dataset.difficulty === selectedDifficulty;
+        card.style.display = (matchesCategory && matchesDifficulty) ? 'block' : 'none';
       });
 
       categoryGroups.forEach(group => {
-        const hasVisibleCards = Array.from(group.nextElementSibling.querySelectorAll('.quiz-card'))
-          .some(card => card.style.display === 'block');
-        group.style.display = hasVisibleCards ? 'block' : 'none';
+        let next = group.nextElementSibling;
+        let hasVisible = false;
+        while (next && next.classList.contains('quiz-card')) {
+          if (next.style.display !== 'none') {
+            hasVisible = true;
+            break;
+          }
+          next = next.nextElementSibling;
+        }
+        group.style.display = hasVisible ? 'block' : 'none';
       });
-    });
+    }
+
+    categoryFilter.addEventListener('change', filterQuizzes);
+    difficultyFilter.addEventListener('change', filterQuizzes);
   </script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

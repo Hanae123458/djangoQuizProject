@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 
 class Participant(AbstractUser):
     profile_picture = models.ImageField(
@@ -24,6 +25,12 @@ class Categorie(models.Model):
         return self.type_quiz
 
 class Quiz(models.Model):
+    DIFFICULTE_CHOICES = [
+        ('Facile', 'Facile'),
+        ('Moyen', 'Moyen'),
+        ('Difficile', 'Difficile'),
+    ]
+    difficulte = models.CharField(max_length=10, choices=DIFFICULTE_CHOICES, default='Facile')
     title = models.CharField(max_length=255)
     description = models.TextField()
     type_quiz = models.ForeignKey(Categorie,on_delete=models.CASCADE)
@@ -32,18 +39,38 @@ class Quiz(models.Model):
     times_visited = models.IntegerField(default=0)
     def __str__(self):
         return self.title
-    
+
 class Question(models.Model):
+    TYPE_CHOICES = [
+        ('QCM', 'QCM'),
+        ('VF', 'Vrai/Faux'),
+        ('RC', 'Réponse courte'),
+    ]
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     question_text = models.CharField(max_length=255)
+    type_question = models.CharField(max_length=3, choices=TYPE_CHOICES, default='VF')
     reponse_1 = models.CharField(max_length=255)
     reponse_2 = models.CharField(max_length=255)
-    reponse_3 = models.CharField(max_length=255)
-    reponse_4 = models.CharField(max_length=255)
+    reponse_3 = models.CharField(max_length=255, blank=True)
+    reponse_4 = models.CharField(max_length=255, blank=True)
     bonne_reponse = models.IntegerField()
 
     def __str__(self):
         return self.question_text
+
+    def clean(self):
+        super().clean()
+
+        if self.type_question == "VF":
+            if self.reponse_3 or self.reponse_4:
+                raise ValidationError("Type Vrai/Faux : Réponse 3 et 4 doivent être vides.")
+        elif self.type_question == "QCM":
+            if not self.reponse_3 or not self.reponse_4:
+                raise ValidationError("Type QCM : les quatre réponses sont requises.")
+        elif self.type_question == "RC":
+            if self.reponse_2 or self.reponse_3 or self.reponse_4:
+                raise ValidationError("Type Réponse courte : seule Réponse 1 doit être utilisée.")
+
     
 
 class Score(models.Model):

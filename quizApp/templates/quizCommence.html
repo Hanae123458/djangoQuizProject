@@ -172,9 +172,10 @@
     {% csrf_token %}
     
     {% for question in questions %}
-    <div class="d-flex justify-content-center">
+<div class="d-flex justify-content-center">
   <div class="card mb-4 w-50 shadow bg-white bg-opacity-10 border border-white border-opacity-25 text-white">
     <div class="card-body">
+      
       <h5 class="card-title text-center fw-bold fs-5">{{question.question_text}}</h5>
       <input type="hidden" name="idQuiz" value="{{quiz.id}}">
   
@@ -188,21 +189,27 @@
         <label class="form-check-label" for="{{question.id}}option2">{{ question.reponse_2 }}</label>
       </div>
   
-      <div class="form-check mb-2">
-        <input class="form-check-input" style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="3" id="{{question.id}}option3" required>
-        <label class="form-check-label" for="{{question.id}}option3">{{ question.reponse_3 }}</label>
-      </div>
-  
-      <div class="form-check mb-2">
-        <input class="form-check-input" style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="4" id="{{question.id}}option4" required>
-        <label class="form-check-label" for="{{question.id}}option4">{{ question.reponse_4 }}</label>
-      </div>
+      {% if quiz.type_quiz.type_quiz != "Vrai ou Faux" %}
+        {% if question.reponse_3 %}
+        <div class="form-check mb-2">
+          <input class="form-check-input" style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="3" id="{{question.id}}option3" required>
+          <label class="form-check-label" for="{{question.id}}option3">{{ question.reponse_3 }}</label>
+        </div>
+        {% endif %}
+
+        {% if question.reponse_4 %}
+        <div class="form-check mb-2">
+          <input class="form-check-input" style="transform: scale(1.2);" type="radio" name="{{question.id}}" value="4" id="{{question.id}}option4" required>
+          <label class="form-check-label" for="{{question.id}}option4">{{ question.reponse_4 }}</label>
+        </div>
+        {% endif %}
+      {% endif %}
+
     </div>
-  </div>
-<br>  
+  </div>  
 </div>
   {% endfor %}
-  <div class="text-center mt-4">
+  <div class="text-center mb-3">
     <button type="submit" class="btn shadow bg-white bg-opacity-10 btn-primary btn-lg px-5">Envoyer</button>
   </div>
 </form>
