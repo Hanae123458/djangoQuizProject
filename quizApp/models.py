@@ -13,7 +13,7 @@ class Participant(AbstractUser):
     level = models.IntegerField(default=1)
     xp = models.IntegerField(default=0)
     bio = models.TextField(max_length=500, blank=True, null=True)
-    is_admin = models.BooleanField(blank=False, null=False, default=False)
+    is_creator = models.BooleanField(blank=False, null=False, default=False)
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
@@ -47,10 +47,18 @@ class Question(models.Model):
     
 
 class Score(models.Model):
-    participant = models.ForeignKey(Participant, on_delete=models.CASCADE)
+    participant = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='scores')
     score_final = models.IntegerField()
     date_participation = models.DateField(default=timezone.now)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='scores')
 
     def __str__(self):
         return f"{self.participant} {self.score_final}/{self.quiz.question_set.count()}"
+    
+class Question_history(models.Model):
+    question = models.ForeignKey(Question, on_delete= models.CASCADE, related_name= 'quiz_history')
+    user_answer = models.CharField(max_length=255)
+    user = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='user_history')
+    time = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return f'{self.question} - {self.user} - {self.time}'

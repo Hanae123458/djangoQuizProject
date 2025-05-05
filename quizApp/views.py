@@ -3,7 +3,7 @@ from django.contrib.auth import login, get_user_model
 from django.contrib import messages
 from .forms import SignUpForm
 from .forms import QuizCategoryForm
-from .models import Quiz, Categorie, Question
+from .models import Quiz, Categorie, Question, Question_history
 from .models import Score
 import datetime
 import json
@@ -74,6 +74,12 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
         user_answers = []
         for question in questions:
             user_answer = request.POST.get(str(question.id))
+            history = Question_history.objects.create(
+                question = question,
+                user_answer = user_answer,
+                user = request.user
+            )
+            history.save()
             print(str(question.id))
             user_answers.append({"question" : question,
                                 "user_answer" : int(user_answer)})

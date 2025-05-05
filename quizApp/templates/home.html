@@ -203,7 +203,9 @@
       <ul class="navbar-nav me-auto">
         <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Accueil</a></li>
         <li class="nav-item"><a class="nav-link" href="{% url 'quizPage' %}">QuizPage</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'create_quiz' %}">Create_quiz</a></li>
+        {% if user.is_creator %}
+        <li class="nav-item"><a class="nav-link" href="{% url 'create_quiz' %}">Create a quiz</a></li>
+        {% endif %}
         <li class="nav-item"><a class="nav-link" href="{% url 'statistics' %}">Statistiques</a></li>
       </ul>
       <div>
