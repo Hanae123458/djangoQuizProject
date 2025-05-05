@@ -10,4 +10,5 @@ urlpatterns=[
                 path('addQuestion/', views.question.as_view(), name="addQuestion"),
                 path('create_quiz/', views.CreateQuizView.as_view(), name='create_quiz'),
                 path('statistics/', StatisticsView.as_view(), name='statistics'),
+                path('test/<int:quizID>', views.question_stats.as_view(), name='test')
             ]

@@ -34,7 +34,7 @@ class Quiz(models.Model):
         return self.title
     
 class Question(models.Model):
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
     question_text = models.CharField(max_length=255)
     reponse_1 = models.CharField(max_length=255)
     reponse_2 = models.CharField(max_length=255)
@@ -56,9 +56,9 @@ class Score(models.Model):
         return f"{self.participant} {self.score_final}/{self.quiz.question_set.count()}"
     
 class Question_history(models.Model):
-    question = models.ForeignKey(Question, on_delete= models.CASCADE, related_name= 'quiz_history')
+    question = models.ForeignKey(Question, on_delete= models.CASCADE, related_name= 'history')
     user_answer = models.CharField(max_length=255)
-    user = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='user_history')
+    user = models.ForeignKey(Participant, on_delete=models.CASCADE, related_name='history')
     time = models.DateTimeField(default=timezone.now)
     def __str__(self):
         return f'{self.question} - {self.user} - {self.time}'

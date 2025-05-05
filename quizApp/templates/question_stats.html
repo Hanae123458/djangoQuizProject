@@ -226,5 +226,27 @@
           </div>
         </div>
       </nav>
-    
+      
+    <div class="container mt-5">
+        <table class="table table-light table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Question</th>
+                    <th scope="col">Bonnes reponses</th>
+                    <th scope="col" >Mauvaises reponses</th>
+                    <th scope="col" >Proprtion</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for question in questions %}
+                <tr>
+                    <td>{{ question.text }}</td>
+                    <td>{{ question.right_answers}}</td>
+                    <td>{{ question.bad_answers}}</td>
+                    <td>{{question.proportion}} %</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
