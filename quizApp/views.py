@@ -53,7 +53,7 @@ class quizChoice(LoginRequiredMixin, View):
         if type_quiz:
             quiz = quiz.filter(type_quiz__type_quiz=type_quiz)
         if difficulte:
-            quiz = quiz.filter(difficulte=difficulte)
+            quiz = quiz.filter(difficulte__iexact=difficulte)
 
         return render(request, 'quizChoice.html', {
             'quiz': quiz,
@@ -68,7 +68,7 @@ class quizCommence(LoginRequiredMixin, View):
         quiz = get_object_or_404(Quiz, id=quiz_id)
         quiz.times_visited+=1
         quiz.save()
-        questions = quiz.question_set.all()
+        questions = quiz.questions.all()
         return render(request, 'quizCommence.html', {'quiz': quiz, 'questions': questions})
 
 class validerReponsesQuiz(LoginRequiredMixin, View):
@@ -77,7 +77,7 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
         quiz = Quiz.objects.get(id=idQuiz)
         quiz.times_played+=1
         quiz.save()
-        questions = quiz.question_set.all()
+        questions = quiz.questions.all()
 
         score = 0
         user_answers = []
@@ -124,10 +124,7 @@ class CreateQuizView(LoginRequiredMixin, FormView):
         quiz = form.save(commit=False)
         quiz.creator = self.request.user
         quiz.save()
-        return render(self.request , 'add_questions.html', {
-            "user": self.request.user,
-            "quiz":quiz
-        })
+        return redirect('addQuestion', quiz.id)
 
 class profile(LoginRequiredMixin, View):
     def get(self, request):

@@ -122,12 +122,8 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Accueil</a></li>
-<<<<<<< HEAD
-          <li class="nav-item"><a class="nav-link" href="{% url 'quizPage' %}">QuizPage</a></li>
-=======
        
           <li class="nav-item"><a class="nav-link " href="{% url 'quizPage' %}">Jouer</a></li>
->>>>>>> 3aa48b4ad16bbecfa791ac52558a1dd0656aaa0c
         </ul>
         <div>
           {% if user.is_authenticated %}
@@ -177,28 +173,31 @@
     </div>
 
     {% csrf_token %}
-    {% for categorie in categories %}
-      <div class="category-title category-group" data-category="{{ categorie.type_quiz|slugify }}">{{ categorie.type_quiz }}</div>
-      {% for quiz in categorie.quiz_set.all %}
-      <div class="quiz-card" data-category="{{ categorie.type_quiz|slugify }}" data-difficulty="{{ quiz.difficulte|lower }}">
-        <a href="{% url 'quizCommence' quiz.id %}">
-          <span class="titles">Titre:</span>
-          <span class="value">{{ quiz.title }}</span> <br>
-      
-          <small>
-            <span class="titles">Description:</span>
-            <span class="value">{{ quiz.description }}</span>
-          </small><br>
-      
-          <small>
-            <span class="titles">Difficulté:</span>
-            <span class="value">{{ quiz.difficulte }}</span>
-          </small>
-        </a>
-      </div>
-      
+    {% if categories %}
+      {% for categorie in categories %}
+        <div class="category-title category-group" data-category="{{ categorie.type_quiz|slugify }}">{{ categorie.type_quiz }}</div>
+        {% for quiz in categorie.quiz_set.all %}
+        <div class="quiz-card" data-category="{{ categorie.type_quiz|slugify }}" data-difficulty="{{ quiz.difficulte|lower }}">
+          <a href="{% url 'quizCommence' quiz.id %}">
+            <span class="titles">Titre:</span>
+            <span class="value">{{ quiz.title }}</span> <br>
+        
+            <small>
+              <span class="titles">Description:</span>
+              <span class="value">{{ quiz.description }}</span>
+            </small><br>
+        
+            <small>
+              <span class="titles">Difficulté:</span>
+              <span class="value">{{ quiz.difficulte }}</span>
+            </small>
+          </a>
+        </div>
+        {% endfor %}
       {% endfor %}
-    {% endfor %}
+    {% else %}
+      <p class="text-center text-warning">Aucun quiz disponible pour le moment. Veuillez revenir plus tard.</p>
+    {% endif %}
   </div>
 
   <footer>

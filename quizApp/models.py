@@ -40,17 +40,14 @@ class Quiz(models.Model):
     def __str__(self):
         return self.title
 
+# Résolution du conflit Git dans le modèle Question
 class Question(models.Model):
-<<<<<<< HEAD
     TYPE_CHOICES = [
         ('QCM', 'QCM'),
         ('VF', 'Vrai/Faux'),
         ('RC', 'Réponse courte'),
     ]
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-=======
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
->>>>>>> 3aa48b4ad16bbecfa791ac52558a1dd0656aaa0c
     question_text = models.CharField(max_length=255)
     type_question = models.CharField(max_length=3, choices=TYPE_CHOICES, default='VF')
     reponse_1 = models.CharField(max_length=255)
