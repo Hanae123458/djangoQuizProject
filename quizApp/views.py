@@ -14,9 +14,35 @@ from django.http import HttpResponse
 from django.views.generic.edit import FormView
 from .forms import QuizForm
 from django.db.models import Avg, Max, Min
-
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm
 
 User = get_user_model()
+
+class LoginViewCustom(View):
+    def get(self, request):
+        form = AuthenticationForm()
+        return render(request, 'login.html', {'form': form})
+
+    def post(self, request):
+        form = AuthenticationForm(request, data=request.POST)
+        role = request.POST.get('role')  # Récupère le rôle coché
+
+        if form.is_valid():
+            user = form.get_user()
+
+            # Met à jour le champ is_creator en fonction du rôle
+            if role == 'createur':
+                user.is_creator = True
+            else:
+                user.is_creator = False
+
+            user.save()
+
+            login(request, user)
+            return redirect('home')
+
+        return render(request, 'login.html', {'form': form})
 
 class home(View):
     def get(self, request):
@@ -68,7 +94,7 @@ class quizCommence(LoginRequiredMixin, View):
         quiz = get_object_or_404(Quiz, id=quiz_id)
         quiz.times_visited+=1
         quiz.save()
-        questions = quiz.question_set.all()
+        questions =quiz.questions.all()
         return render(request, 'quizCommence.html', {'quiz': quiz, 'questions': questions})
 
 class validerReponsesQuiz(LoginRequiredMixin, View):
@@ -77,7 +103,7 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
         quiz = Quiz.objects.get(id=idQuiz)
         quiz.times_played+=1
         quiz.save()
-        questions = quiz.question_set.all()
+        questions = quiz.questions.all()
 
         score = 0
         user_answers = []

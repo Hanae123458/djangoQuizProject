@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Choix du Quiz</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  
   <style>
     body {
       background: linear-gradient(135deg, #667eea, #764ba2);
@@ -18,17 +21,15 @@
       backdrop-filter: blur(10px);
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     }
-
     .navbar-brand, .nav-link {
       color: #fff !important;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 1px;
       transition: color 0.3s ease;
     }
-
     .nav-link:hover, .nav-link.active {
       color: #ffd700 !important;
     }
-
     .quiz-container {
       max-width: 800px;
       margin: 3rem auto;
@@ -112,42 +113,40 @@
   </style>
 </head>
 <body>
-
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  {% load static %}
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
     <div class="container">
-      <a class="navbar-brand fw-bold" href="{% url 'home' %}"><i class="fas fa-brain me-2"></i>QuizApp</a>
+      <a class="navbar-brand fw-bold" href="{% url 'home' %}">
+        <i class="fas fa-brain me-2"></i>QuizApp
+      </a>
       <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Accueil</a></li>
-<<<<<<< HEAD
-          <li class="nav-item"><a class="nav-link" href="{% url 'quizPage' %}">QuizPage</a></li>
-=======
-       
-          <li class="nav-item"><a class="nav-link " href="{% url 'quizPage' %}">Jouer</a></li>
->>>>>>> 3aa48b4ad16bbecfa791ac52558a1dd0656aaa0c
+          <li class="nav-item"><a class="nav-link" href="{% url 'quizPage' %}">Jouer</a></li>
+          {% if user.is_creator %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'create_quiz' %}">Créer un quiz</a></li>
+          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'statistics' %}">Statistiques</a></li>
         </ul>
         <div>
           {% if user.is_authenticated %}
-          <div class="d-inline">
-            <form action="{% url 'logout' %}" method="post" class="d-inline">
+            <form action="{% url 'logout' %}" method="post" class="d-inline me-2">
               {% csrf_token %}
-              <button type="submit" class="btn btn-outline-light me-2">Déconnexion</button>
+              <button type="submit" class="btn btn-outline-light">Déconnexion</button>
             </form>
-            <a href="{%url 'profile'%}" class="me-2">
+            <a href="{% url 'profile' %}">
               {% if user.profile_picture %}
-                <img src="{{ user.profile_picture.url }}" alt="Profil" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px; border: 4px solid purple;">
+                <img src="{{ user.profile_picture.url }}" alt="Profil" class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:4px solid purple;">
               {% else %}
-                {% load static %}
-                <img src="{% static 'images/default_profile.jpg' %}" alt="Profil" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px; border: 4px solid purple;">
+                <img src="{% static 'images/default_profile.jpg' %}" alt="Profil" class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:4px solid purple;">
               {% endif %}
             </a>
-          </div>
           {% else %}
-          <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Connexion</a>
-          <a href="{% url 'signup' %}" class="btn btn-main">Inscription</a>
+            <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Connexion</a>
+            <a href="{% url 'signup' %}" class="btn btn-main">Inscription</a>
           {% endif %}
         </div>
       </div>

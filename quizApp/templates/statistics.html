@@ -7,30 +7,32 @@
     <title>Statistiques des Scores</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" />
-
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
     <style>
         body {
             background: linear-gradient(135deg, #667eea, #764ba2);
             font-family: 'Poppins', sans-serif;
             color: #fff;
             margin: 0;
+            
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            backdrop-filter: blur(6px);
-            padding: 3rem 2rem;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-        }
-
+        .navbar {
+            background-color: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            }
+            .navbar-brand, .nav-link {
+            color: #fff !important;
+            font-weight: 700;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+            }
+            .nav-link:hover, .nav-link.active {
+            color: #ffd700 !important;
+            }
         h1 {
             text-align: center;
             color: #ffd700;
@@ -38,22 +40,29 @@
             font-weight: 700;
             text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.5);
         }
-
+        
+        .main-container {
+            max-width: 900px;
+            margin: 3rem auto;    
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(6px);
+            padding: 2rem 3rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
         .chart-container {
             position: relative;
             height: 400px;
             margin-bottom: 40px;
         }
-
         .stats-summary {
             display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
             margin-bottom: 30px;
         }
-
         .stat-card {
-            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            background: linear-gradient(135deg,rgb(127, 202, 234) 0%,rgb(97, 202, 247) 100%);
             color: white;
             padding: 20px;
             border-radius: 8px;
@@ -62,19 +71,23 @@
             margin: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
         .stat-card h3 {
             margin-top: 0;
             font-weight: 400;
             font-size: 1rem;
         }
-
         .stat-card p {
             font-size: 1.8rem;
             margin-bottom: 0;
             font-weight: 500;
         }
-
+        footer {
+      background-color: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+      color: white;
+      text-align: center;
+      padding: 0.7rem 0;
+    }
         @media (max-width: 768px) {
             .container {
                 padding: 15px;
@@ -92,47 +105,49 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-        <div class="container">
-          <a class="navbar-brand fw-bold" href="{% url 'home' %}">
-            <i class="fas fa-brain me-2"></i>QuizApp
-          </a>
-          <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-              <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Accueil</a></li>
-              <li class="nav-item"><a class="nav-link" href="{% url 'quizPage' %}">Jouer</a></li>
-              {% if user.is_creator %}
-              <li class="nav-item"><a class="nav-link" href="{% url 'create_quiz' %}">Créer un quiz</a></li>
-              {% endif %}
-              <li class="nav-item"><a class="nav-link" href="{% url 'statistics' %}">Statistiques</a></li>
-            </ul>
-            <div>
-              {% if user.is_authenticated %}
-                <form action="{% url 'logout' %}" method="post" class="d-inline me-2">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-outline-light">Déconnexion</button>
-                </form>
-                <a href="{% url 'profile' %}">
-                  {% if user.profile_picture %}
-                    <img src="{{ user.profile_picture.url }}" alt="Profil" class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:4px solid purple;">
-                  {% else %}
-                    <img src="{% static 'images/default_profile.jpg' %}" alt="Profil" class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:4px solid purple;">
-                  {% endif %}
-                </a>
+    {% load static %}
+  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="{% url 'home' %}">
+        <i class="fas fa-brain me-2"></i>QuizApp
+      </a>
+      <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Accueil</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'quizPage' %}">Jouer</a></li>
+          {% if user.is_creator %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'create_quiz' %}">Créer un quiz</a></li>
+          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'statistics' %}">Statistiques</a></li>
+        </ul>
+        <div>
+          {% if user.is_authenticated %}
+            <form action="{% url 'logout' %}" method="post" class="d-inline me-2">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-light">Déconnexion</button>
+            </form>
+            <a href="{% url 'profile' %}">
+              {% if user.profile_picture %}
+                <img src="{{ user.profile_picture.url }}" alt="Profil" class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:4px solid purple;">
               {% else %}
-                <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Connexion</a>
-                <a href="{% url 'signup' %}" class="btn btn-main">Inscription</a>
+                <img src="{% static 'images/default_profile.jpg' %}" alt="Profil" class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:4px solid purple;">
               {% endif %}
-            </div>
-          </div>
+            </a>
+          {% else %}
+            <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Connexion</a>
+            <a href="{% url 'signup' %}" class="btn btn-main">Inscription</a>
+          {% endif %}
         </div>
-      </nav> 
+      </div>
+    </div>
+  </nav>
+
+
     <div class="container">
         <h1>Statistiques des Scores</h1>
-        
         <div class="stats-summary">
             <div class="stat-card">
                 <h3>Score Moyen</h3>
@@ -151,11 +166,17 @@
                 <p>{{ scores|length }}</p>
             </div>
         </div>
-        
         <div class="chart-container">
             <canvas id="scoreChart"></canvas>
         </div>
     </div>
+
+<footer>
+  <div class="container" >
+    <p class="mb-0">© 2025 QuizApp. Votre savoir, notre mission.</p>
+  </div>
+</footer>
+
 
     <script>
         const ctx = document.getElementById('scoreChart').getContext('2d');
