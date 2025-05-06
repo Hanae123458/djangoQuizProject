@@ -40,6 +40,7 @@ class Quiz(models.Model):
     def __str__(self):
         return self.title
 
+# Résolution du conflit Git dans le modèle Question
 class Question(models.Model):
     TYPE_CHOICES = [
         ('QCM', 'QCM'),

@@ -141,6 +141,14 @@
             <form method="post">
                 {% csrf_token %}
                 {{ form.as_p }}
+                <div class="mb-3">
+                    <label for="typeQuiz" class="form-label">Type de Quiz</label>
+                    <select id="typeQuiz" name="type_quiz" class="form-select">
+                        <option value="QCM">QCM</option>
+                        <option value="VF">Vrai/Faux</option>
+                        <option value="RC">Réponse courte</option>
+                    </select>
+                </div>
                 <button type="submit">Créer</button>
             </form>
         </div>

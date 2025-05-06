@@ -27,4 +27,4 @@ class QuizCategoryForm(forms.Form):
 class QuizForm(forms.ModelForm):
     class Meta:
         model = Quiz
-        fields = ['title', 'description', 'type_quiz']
+        fields = ['title', 'description', 'type_quiz', 'difficulte']
