@@ -149,17 +149,7 @@
       {% csrf_token %}
       
       <!-- Rôle -->
-      <div class="mb-3">
-        <label class="form-label d-block">Choisir votre rôle :</label>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="role" id="joueur" value="joueur" required>
-          <label class="form-check-label" for="joueur">Joueur</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="role" id="createur" value="createur">
-          <label class="form-check-label" for="createur">Joueur / Créateur</label>
-        </div>
-      </div>
+      
 
       <!-- Formulaire d'authentification -->
       {{ form.as_p }}

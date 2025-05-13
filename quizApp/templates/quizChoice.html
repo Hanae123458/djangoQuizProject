@@ -58,35 +58,75 @@
     }
 
     .quiz-card {
-      background: #f3fe94;
+      background: rgba(255, 255, 255, 0.92);
       color: #333 !important;
-      padding: 1rem 1.5rem;
+      padding: 0.8rem 1.2rem;
       margin-bottom: 1rem;
-      border-radius: 12px;
-      transition: all 0.3s ease;
+      border-radius: 14px;
+      transition: box-shadow 0.3s, transform 0.2s;
+      border: none;
+      box-shadow: 0 2px 8px 0 rgba(118, 75, 162, 0.10), 0 1.5px 6px 0 #ffd70033;
+      display: block;
+      position: relative;
+      font-size: 0.98rem;
     }
-
+    .quiz-card::before {
+      content: none;
+    }
     .quiz-card:hover {
-      background: #efff64;
+      background: #fffbe7;
       color: #333 !important;
-      transform: scale(1.03);
-      box-shadow: 0 6px 12px  #efff64;
+      transform: translateY(-1px) scale(1.01);
+      box-shadow: 0 6px 18px 0 #ffd70033, 0 2px 8px 0 #764ba233;
     }
-
     .quiz-card a {
       color: inherit;
       text-decoration: none;
-      font-weight: 600;
+      font-weight: 500;
       display: block;
+      width: 100%;
+      font-size: 0.98rem;
     }
-
-    .titles{
-      color: #0096d1; /* Violet foncé pour les libellés */
-      font-weight: bold;
+    .titles {
+      color: #764ba2;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      font-size: 0.97rem;
     }
-
     .value {
-      color:  #333 !important; /* Blanc ou autre couleur contrastée */
+      color: #333 !important;
+      font-size: 0.98rem;
+      font-weight: 500;
+    }
+    .quiz-card small {
+      color: #555;
+      font-size: 0.93rem;
+      display: block;
+      margin-top: 0.15rem;
+    }
+    .quiz-card .badge {
+      background: #ffd700;
+      color: #fff;
+      font-size: 0.92rem;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 0.2em 0.7em;
+      margin-left: 0.5em;
+      box-shadow: 0 1px 4px #ffd70033;
+      border: none;
+      transition: background 0.2s;
+    }
+    .quiz-card .badge.facile {
+      background: linear-gradient(90deg, #4caf50 70%, #a8e063 100%);
+      color: #fff;
+    }
+    .quiz-card .badge.moyen {
+      background: linear-gradient(90deg, #ff9800 70%, #ffd700 100%);
+      color: #fff;
+    }
+    .quiz-card .badge.difficile {
+      background: linear-gradient(90deg, #e53935 70%, #ffd700 100%);
+      color: #fff;
     }
 
     @media (max-width: 768px) {
@@ -121,20 +161,19 @@
     <div class="mb-3 text-center">
 
       <label for="categoryFilter" class="form-label fw-bold">Filtrer par catégorie :</label>
-      <select id="categoryFilter" class="form-select form-select-sm rounded-pill shadow-sm text-center w-50 mx-auto mb-3" style="background-color:rgba(134, 251, 247, 0.832); color: #333;">
+      <select id="categoryFilter" class="form-select form-select-sm rounded-pill shadow-sm text-center w-50 mx-auto mb-3" style="background-color:#e6e6fa; color: #764ba2; border: 1.5px solid #764ba2;">
         <option value="all">Toutes les catégories</option>
         {% for categorie in categories %}
-          <option value="{{ categorie.type_quiz|slugify }}" style="color: #333;">{{ categorie.type_quiz }}</option>
+          <option value="{{ categorie.type_quiz|slugify }}" style="color: #764ba2;">{{ categorie.type_quiz }}</option>
         {% endfor %}
       </select>
 
       <label for="difficultyFilter" class="form-label fw-bold mt-2">Filtrer par difficulté :</label>
-      <select id="difficultyFilter" class="form-select form-select-sm rounded-pill shadow-sm text-center w-50 mx-auto" style="background-color:rgba(134, 251, 247, 0.832); color: #333;">
-        <option style="color: #333;" value="all">Toutes les difficultés</option>
-        <option style="color: #333;" value="facile">Facile</option>
-        <option style="color: #333;" value="moyen">Moyen</option>
-        <option style="color: #333;" value="difficile">Difficile</option>
-
+      <select id="difficultyFilter" class="form-select form-select-sm rounded-pill shadow-sm text-center w-50 mx-auto" style="background-color:#e6e6fa; color: #764ba2; border: 1.5px solid #764ba2;">
+        <option style="color: #764ba2;" value="all">Toutes les difficultés</option>
+        <option style="color: #764ba2;" value="facile">Facile</option>
+        <option style="color: #764ba2;" value="moyen">Moyen</option>
+        <option style="color: #764ba2;" value="difficile">Difficile</option>
       </select>
     </div>
 
@@ -145,18 +184,13 @@
         {% for quiz in categorie.quiz_set.all %}
         <div class="quiz-card" data-category="{{ categorie.type_quiz|slugify }}" data-difficulty="{{ quiz.difficulte|lower }}">
           <a href="{% url 'quizCommence' quiz.id %}">
-            <span class="titles">Titre:</span>
-            <span class="value">{{ quiz.title }}</span> <br>
-        
-            <small>
-              <span class="titles">Description:</span>
-              <span class="value">{{ quiz.description }}</span>
-            </small><br>
-        
-            <small>
-              <span class="titles">Difficulté:</span>
-              <span class="value">{{ quiz.difficulte }}</span>
-            </small>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <span class="value" style="font-size:1.13rem; font-weight:600; color:#764ba2;">{{ quiz.title }}</span>
+              <span class="badge {% if quiz.difficulte|lower == 'facile' %}facile{% elif quiz.difficulte|lower == 'moyen' %}moyen{% elif quiz.difficulte|lower == 'difficile' %}difficile{% endif %}">{{ quiz.difficulte }}</span>
+            </div>
+            <div style="margin-top: 0.3rem; color: #555; font-size: 0.95rem;">
+              {{ quiz.description }}
+            </div>
           </a>
         </div>
         {% endfor %}
