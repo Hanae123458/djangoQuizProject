@@ -188,46 +188,21 @@
   </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-        <div class="container">
-          <a class="navbar-brand fw-bold" href="{% url 'home' %}">
-            <i class="fas fa-brain me-2"></i>QuizApp
-          </a>
-          <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-              <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Accueil</a></li>
-              <li class="nav-item"><a class="nav-link" href="{% url 'quizPage' %}">Jouer</a></li>
-              {% if user.is_creator %}
-              <li class="nav-item"><a class="nav-link" href="{% url 'create_quiz' %}">Créer un quiz</a></li>
-              {% endif %}
-              <li class="nav-item"><a class="nav-link" href="{% url 'statistics' %}">Statistiques</a></li>
-            </ul>
-            <div>
-              {% if user.is_authenticated %}
-                <form action="{% url 'logout' %}" method="post" class="d-inline me-2">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-outline-light">Déconnexion</button>
-                </form>
-                <a href="{% url 'profile' %}">
-                  {% if user.profile_picture %}
-                    <img src="{{ user.profile_picture.url }}" alt="Profil" class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:4px solid purple;">
-                  {% else %}
-                    <img src="{% static 'images/default_profile.jpg' %}" alt="Profil" class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:4px solid purple;">
-                  {% endif %}
-                </a>
-              {% else %}
-                <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Connexion</a>
-                <a href="{% url 'signup' %}" class="btn btn-main">Inscription</a>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-      </nav>
+    {% include 'navbar.html' %}
       
     <div class="container mt-5">
+      <form id="quizForm" class="d-flex align-items-end gap-2 mb-4" style="max-width: 500px;">
+        <div class="flex-grow-1">
+          <label for="quizSelect" class="form-label text-white fw-bold mb-1">Quiz :</label>
+          <select class="form-select form-select-sm" id="quizSelect" name="quiz_id" required style="min-width: 180px;">
+            <option value="" disabled selected>-- Sélectionnez --</option>
+            {% for quiz in quizzes %}
+              <option value="{{ quiz.id }}">{{ quiz.title }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <button type="submit" class="btn btn-main btn-sm" style="white-space:nowrap; min-width:120px;">Statistiques</button>
+      </form>
         <table class="table table-light table-striped">
             <thead>
                 <tr>
@@ -235,6 +210,8 @@
                     <th scope="col">Bonnes reponses</th>
                     <th scope="col" >Mauvaises reponses</th>
                     <th scope="col" >Proprtion</th>
+                    <th scope="col" >Réponse la plus frequente</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -244,9 +221,22 @@
                     <td>{{ question.right_answers}}</td>
                     <td>{{ question.bad_answers}}</td>
                     <td>{{question.proportion}} %</td>
+                    <td>{{question.most_frequent_answer}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </body>
+
+<script>
+document.querySelector('#quizForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const select = document.getElementById('quizSelect');
+  const quizId = select.value;
+  if (quizId) {
+    const url = "{% url 'quiz_stats' 0 %}".replace("0", quizId);
+    window.location.href = url;
+  }
+});
+</script>

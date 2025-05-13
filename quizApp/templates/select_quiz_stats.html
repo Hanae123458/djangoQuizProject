@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Sélectionner un Quiz</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        .container {
+            
+            background: rgba(255,255,255,0.08);
+            border-radius: 15px;
+            padding: 2rem 3rem;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(8.5px);
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+        h2 {
+            text-align: center;
+            font-weight: 700;
+            font-size: 2.1rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+        }
+        .quiz-list {
+            list-style: none;
+            padding: 0;
+        }
+        .quiz-list li {
+            background: rgba(255,255,255,0.15);
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        }
+        .quiz-title {
+            font-weight: 600;
+            color: #fff;
+        }
+        .btn-main {
+            background-color: #ffd700;
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 18px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .btn-main:hover {
+            background-color: #ffc107;
+            color: #222;
+        }
+        footer {
+            background-color: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            color: white;
+            text-align: center;
+            padding: 0.7rem 0;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    {% load static %}
+    <div class="container">
+        <h2>Sélectionnez un Quiz</h2>
+        <ul class="quiz-list">
+            {% for quiz in quizzes %}
+            <li>
+                <span class="quiz-title">{{ quiz.title }}</span>
+                <a href="{% url 'quiz_stats' quiz.id %}" class="btn btn-main">Voir les stats</a>
+            </li>
+            {% empty %}
+            <li>Aucun quiz disponible.</li>
+            {% endfor %}
+        </ul>
+        <div class="text-center mt-4">
+            <a href="{% url 'home' %}" class="btn btn-light">Retour à l'accueil</a>
+        </div>
+    </div>
+    <footer>
+        <div class="container">
+            <p class="mb-0">© 2025 QuizApp. Votre savoir, notre mission.</p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

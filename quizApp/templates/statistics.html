@@ -92,44 +92,7 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-        <div class="container">
-          <a class="navbar-brand fw-bold" href="{% url 'home' %}">
-            <i class="fas fa-brain me-2"></i>QuizApp
-          </a>
-          <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-              <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Accueil</a></li>
-              <li class="nav-item"><a class="nav-link" href="{% url 'quizPage' %}">Jouer</a></li>
-              {% if user.is_creator %}
-              <li class="nav-item"><a class="nav-link" href="{% url 'create_quiz' %}">Créer un quiz</a></li>
-              {% endif %}
-              <li class="nav-item"><a class="nav-link" href="{% url 'statistics' %}">Statistiques</a></li>
-            </ul>
-            <div>
-              {% if user.is_authenticated %}
-                <form action="{% url 'logout' %}" method="post" class="d-inline me-2">
-                  {% csrf_token %}
-                  <button type="submit" class="btn btn-outline-light">Déconnexion</button>
-                </form>
-                <a href="{% url 'profile' %}">
-                  {% if user.profile_picture %}
-                    <img src="{{ user.profile_picture.url }}" alt="Profil" class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:4px solid purple;">
-                  {% else %}
-                    <img src="{% static 'images/default_profile.jpg' %}" alt="Profil" class="rounded-circle" style="width:40px; height:40px; object-fit:cover; border:4px solid purple;">
-                  {% endif %}
-                </a>
-              {% else %}
-                <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Connexion</a>
-                <a href="{% url 'signup' %}" class="btn btn-main">Inscription</a>
-              {% endif %}
-            </div>
-          </div>
-        </div>
-      </nav> 
+    {% include 'navbar.html' %}
     <div class="container">
         <h1>Statistiques des Scores</h1>
         

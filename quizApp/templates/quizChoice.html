@@ -113,42 +113,7 @@
 </head>
 <body>
 
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="{% url 'home' %}"><i class="fas fa-brain me-2"></i>QuizApp</a>
-      <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Accueil</a></li>
-       
-          <li class="nav-item"><a class="nav-link " href="{% url 'quizPage' %}">Jouer</a></li>
-        </ul>
-        <div>
-          {% if user.is_authenticated %}
-          <div class="d-inline">
-            <form action="{% url 'logout' %}" method="post" class="d-inline">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-outline-light me-2">Déconnexion</button>
-            </form>
-            <a href="{%url 'profile'%}" class="me-2">
-              {% if user.profile_picture %}
-                <img src="{{ user.profile_picture.url }}" alt="Profil" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px; border: 4px solid purple;">
-              {% else %}
-                {% load static %}
-                <img src="{% static 'images/default_profile.jpg' %}" alt="Profil" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover; margin-right: 10px; border: 4px solid purple;">
-              {% endif %}
-            </a>
-          </div>
-          {% else %}
-          <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Connexion</a>
-          <a href="{% url 'signup' %}" class="btn btn-main">Inscription</a>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-  </nav>
+  {% include 'navbar.html' %}
 
   <div class="quiz-container">
     <h1>Choisissez un quiz</h1>

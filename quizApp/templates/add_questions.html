@@ -44,12 +44,12 @@
         .form-container input[type="radio"] {
             accent-color: #ffd700;
             transform: scale(1.5);
-            
+
         }
 
-       th{
-        text-align: center;
-       }
+        th {
+            text-align: center;
+        }
 
         .form-container button {
             background-color: #ffd700;
@@ -69,56 +69,100 @@
 </head>
 
 <body>
+    {% include 'navbar.html' %}
     <div class="form-container">
-        <h2 class="text-center mb-4">Ajoutez une question pour {{quiz.title}}</h2>
+        <h2 class="text-center mb-4">Ajoutez une question pour "{{quiz.title}}"</h2>
         <form id="questionForm">
             <input type="hidden" id="quizID" value="{{quiz.id}}">
             <h5>Question</h5>
             <textarea type="text" id="questionText" placeholder="Question Text" required></textarea>
-            <table style="width: 100%;">
-                <thead>
-                    <td><h5>Reponse</h5></td>
-                    <td ><h5>Bonne reponse</h5></td>
-                </thead>
-                <tr>
-                    <td> 
-                        <input type="text" id="answer1" placeholder="Answer 1" required>
-                    </td>
-                    <td>
-                        <input type="radio" name="correctAnswer"  value="1" required>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="text" id="answer2" placeholder="Answer 2" required>
-                    </td>
-                    <td>
-                        <input type="radio" name="correctAnswer"  value="2" required>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="text" id="answer3" placeholder="Answer 3" required>
-                    </td>
-                    <td>
-                        <input type="radio" name="correctAnswer"  value="3" required>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <input type="text" id="answer4" placeholder="Answer 4" required>
-                    </td>
-                    <td>
-                        <input type="radio" name="correctAnswer"  value="4" required>
-                    </td>
-                </tr>
+            <div class="mb-3">
+                <label for="typeQuiz" class="form-label">Type de Question</label>
+                <select id="typeQuiz" name="type_quiz" class="form-select">
+                    <option value="QCM">QCM</option>
+                    <option value="VF">Vrai/Faux</option>
+                    <option value="RC">Réponse courte</option>
+                </select>
+            </div>
 
-            </table>
+            <div id="QCM" style="display: block;">
+                <table style="width: 100%;">
+                    <thead>
+                        <td>
+                            <h5>Reponse</h5>
+                        </td>
+                        <td>
+                            <h5>Bonne reponse</h5>
+                        </td>
+                    </thead>
+                    <tr>
+                        <td>
+                            <input type="text" id="answer1" placeholder="Answer 1" required>
+                        </td>
+                        <td>
+                            <input type="radio" name="correctAnswer" value="1" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" id="answer2" placeholder="Answer 2" required>
+                        </td>
+                        <td>
+                            <input type="radio" name="correctAnswer" value="2" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" id="answer3" placeholder="Answer 3" required>
+                        </td>
+                        <td>
+                            <input type="radio" name="correctAnswer" value="3" required>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" id="answer4" placeholder="Answer 4" required>
+                        </td>
+                        <td>
+                            <input type="radio" name="correctAnswer" value="4" required>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+            <div id="VF" style="display: none;">
+                <h3 style="text-align: center;">Réponse</h3>
+                <div style="text-align: center;">
+                    <label style="margin-right: 15rem;">
+                        <input type="radio" name="vfAnswer" value="vrai" required> Vrai
+                    </label>
+                    <label>
+                        <input type="radio" name="vfAnswer" value="faux" required> Faux
+                    </label>
+                </div>
+            </div>
+
+            <div id="RC" style="display: none;">
+                <h3 style="text-align: center;">Réponse</h3>
+                <input type="text" name="reponse_c" id="answer" placeholder="Reponse correcte">
+            </div>
+            
+
             <button type="button" id="submitButton">Submit</button>
         </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
+        // Add event listener to toggle visibility of question types
+        const typeQuestion = document.getElementById("typeQuiz");
+        typeQuestion.addEventListener('change', function () {
+            const selectedType = typeQuestion.value;
+            document.getElementById("QCM").style.display = selectedType === "QCM" ? "block" : "none";
+            document.getElementById("VF").style.display = selectedType === "VF" ? "block" : "none";
+            document.getElementById("RC").style.display = selectedType === "RC" ? "block" : "none";
+        });
+    
         window.csrfToken = "{{ csrf_token }}";
         function getCookie(name) {
             let cookieValue = null;
@@ -138,12 +182,21 @@
         axios.defaults.headers.common['X-CSRFToken'] = getCookie('csrftoken');
         document.getElementById('submitButton').addEventListener('click', function () {
             const quizID = document.getElementById('quizID').value;
-            console.log(quizID);
+            //console.log(quizID);
+            
             const questionText = document.getElementById('questionText').value;
-            const answer1 = document.getElementById('answer1').value;
-            const answer2 = document.getElementById('answer2').value;
-            const answer3 = document.getElementById('answer3').value;
-            const answer4 = document.getElementById('answer4').value;
+            let answer1 = document.getElementById('answer1').value;
+            if(typeQuestion.value == "RC"){
+                answer1 = document.getElementById('answer').value;
+            }
+            if(typeQuestion.value == "VF"){
+                const vfAnswer = document.querySelector('input[name="vfAnswer"]:checked').value;
+                console.log(vfAnswer);
+                answer1 = (vfAnswer == "vrai");
+            }
+            const answer2 = document.getElementById('answer2').value || "";
+            const answer3 = document.getElementById('answer3').value || "";
+            const answer4 = document.getElementById('answer4').value || "";
             let correctAnswer = null;
             const radios = document.getElementsByName('correctAnswer');
             for (let i = 0; i < radios.length; i++) {
@@ -152,54 +205,54 @@
                     break;
                 }
             }
-
-            if(answer1==""
-                ||answer2==""
-                ||answer3==""
-                ||answer4==""
-                ||questionText==""
-            ){
+            if ((answer1 == ""
+                || answer2 == ""
+                || answer3 == ""
+                || answer4 == ""
+                || questionText == "")&& typeQuestion.value == "QCM"
+            ) {
                 Swal.fire({
-                icon: "error",
-                title: "Veuillez remplir tous les champs",
-                text: "Something went wrong!"
+                    icon: "error",
+                    title: "Veuillez remplir tous les champs",
+                    text: "Something went wrong!"
                 });
                 return
             }
-
+            console.log(answer1);
             axios.post("{% url 'addQuestion' %}", {
                 quizID: quizID,
+                type_question:typeQuestion.value,
                 question_text: questionText,
                 reponse_1: answer1,
                 reponse_2: answer2,
                 reponse_3: answer3,
                 reponse_4: answer4,
-                bonne_reponse: correctAnswer
+                bonne_reponse: correctAnswer || 1
             })
                 .then(response => {
                     Swal.fire({
-                        icon : "success",
-                        title : "question ajoutée avec succès !",
-                        text : "Voulez vous ajouter plus de questions ?",
-                        confirmButtonText : "Oui",
-                        cancelButtonText : "Non",
+                        icon: "success",
+                        title: "question ajoutée avec succès !",
+                        text: "Voulez vous ajouter plus de questions ?",
+                        confirmButtonText: "Oui",
+                        cancelButtonText: "Non",
                         showCancelButton: true
-                    }).then((result)=>{
-                        if(!result.isConfirmed){
+                    }).then((result) => {
+                        if (!result.isConfirmed) {
                             window.location.href = "{% url 'home' %}";
                         }
                     })
-                    
-                    
+
+
                     document.getElementById('questionForm').reset();
                 })
                 .catch(error => {
                     console.error('There was an error adding the question!', error);
                     Swal.fire({
-                icon: "error",
-                title: "Oops ...",
-                text: "Something went wrong!"
-                });
+                        icon: "error",
+                        title: "Oops ...",
+                        text: "Something went wrong!"
+                    });
                 });
         });
     </script>

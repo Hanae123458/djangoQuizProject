@@ -82,18 +82,39 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
         score = 0
         user_answers = []
         for question in questions:
-            user_answer = request.POST.get(str(question.id))
-            history = Question_history.objects.create(
-                question = question,
-                user_answer = user_answer,
-                user = request.user
-            )
-            history.save()
-            print(str(question.id))
-            user_answers.append({"question" : question,
-                                "user_answer" : int(user_answer)})
-            if user_answer and int(user_answer) == question.bonne_reponse:
-                score += 1
+            if question.type_question == 'QCM':
+                user_answer = request.POST.get(str(question.id))
+                history = Question_history.objects.create(
+                    question = question,
+                    user_answer = user_answer,
+                    user = request.user
+                )
+                history.save()
+                print(str(question.id))
+                user_answers.append({"question" : question,
+                                    "user_answer" : int(user_answer)})
+                if user_answer and int(user_answer) == question.bonne_reponse:
+                    score += 1
+            else :
+                user_answer = request.POST.get(str(question.id))
+                history = Question_history.objects.create(
+                    question = question,
+                    user_answer = user_answer,
+                    user = request.user
+                )
+                history.save()
+                user_answers.append({"question" : question,
+                                    "user_answer" : (user_answer)
+                            
+                                    })
+                
+                if user_answer and user_answer == question.reponse_1:
+                    score += 1
+
+                    
+            
+                    
+            
 
         user = request.user
         user.xp += score * 100 
@@ -118,13 +139,20 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
 class CreateQuizView(LoginRequiredMixin, FormView):
     template_name = 'create_quiz.html'
     form_class = QuizForm
-    
+
+    def dispatch(self, request, *args, **kwargs):
+        if not getattr(request.user, 'is_creator', False):
+            return redirect('home')
+        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         quiz = form.save(commit=False)
         quiz.creator = self.request.user
         quiz.save()
-        return redirect('addQuestion', quiz.id)
+        return render(self.request, 'add_questions.html', {
+            "user": self.request.user,
+            "quiz": quiz
+        })
 
 class profile(LoginRequiredMixin, View):
     def get(self, request):
@@ -161,6 +189,7 @@ class question(View):
             Question.objects.create(
                 quiz=quiz,
                 question_text=data.get('question_text'),
+                type_question = data.get('type_question'),
                 reponse_1=data.get('reponse_1'),
                 reponse_2=data.get('reponse_2'),
                 reponse_3=data.get('reponse_3'),
@@ -173,6 +202,7 @@ class question(View):
         except Quiz.DoesNotExist:
             return JsonResponse({'error': 'Quiz not found'}, status=404)
         except Exception as e:
+            print(e)
             return JsonResponse({'error': str(e)}, status=400)
 
 
@@ -184,15 +214,47 @@ class question_stats(View):
         for question in questions : 
             answers = question.history.all()
             right_answers = 0
+            answer_counter = {}
             for answer in answers : 
-                if answer.user_answer == str(question.bonne_reponse) : 
-                    right_answers+=1
+                # Count frequency for most_frequent_answer
+                ans_val = (answer.user_answer or '').strip().lower()
+                if ans_val:
+                    answer_counter[ans_val] = answer_counter.get(ans_val, 0) + 1
+                # Handle different types of questions (QCM, VF, RC)
+                if question.type_question == 'QCM':
+                    if answer.user_answer and str(answer.user_answer) == str(question.bonne_reponse):
+                        right_answers += 1
+                elif question.type_question == 'VF':
+                    bonne = str(question.reponse_1).strip().lower()
+                    user_val = str(answer.user_answer).strip().lower()
+                    if user_val == bonne:
+                        right_answers += 1
+                elif question.type_question == 'RC':
+                    if answer.user_answer and answer.user_answer.strip().lower() == (question.reponse_1 or '').strip().lower():
+                        right_answers += 1
+            # Find most frequent answer
+            if answer_counter:
+                most_frequent_answer = max(answer_counter.items(), key=lambda x: x[1])[0]
+            else:
+                most_frequent_answer = None
+            proportion = round((right_answers / len(answers)) * 100, 0) if len(answers) > 0 else '_'
             data.append({
                 'text' : question.question_text,
                 'right_answers': right_answers,
                 'bad_answers' : len(answers)-right_answers,
-                'proportion':round((right_answers/len(answers))*100, 0) or '_'
+                'proportion': proportion,
+                'most_frequent_answer': most_frequent_answer
             })
         return render(request, 'question_stats.html', {
-            'questions':data
+            'questions':data,
+            "quizzes" :  Quiz.objects.all()
+        })
+    def post(self, request):
+        self.get(self, request, request.POST.get(id))
+
+class fetch_quiz_stats(View):
+    def get(self, request) :
+        quizzes = Quiz.objects.all()
+        return render(request, "select_quiz_stats.html", {
+            "quizzes" : quizzes
         })

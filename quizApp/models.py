@@ -49,9 +49,9 @@ class Question(models.Model):
     ]
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
     question_text = models.CharField(max_length=255)
-    type_question = models.CharField(max_length=3, choices=TYPE_CHOICES, default='VF')
+    type_question = models.CharField(max_length=3, choices=TYPE_CHOICES, default='QCM')
     reponse_1 = models.CharField(max_length=255)
-    reponse_2 = models.CharField(max_length=255)
+    reponse_2 = models.CharField(max_length=255, blank=True)
     reponse_3 = models.CharField(max_length=255, blank=True)
     reponse_4 = models.CharField(max_length=255, blank=True)
     bonne_reponse = models.IntegerField()
@@ -61,7 +61,6 @@ class Question(models.Model):
 
     def clean(self):
         super().clean()
-
         if self.type_question == "VF":
             if self.reponse_3 or self.reponse_4:
                 raise ValidationError("Type Vrai/Faux : Réponse 3 et 4 doivent être vides.")

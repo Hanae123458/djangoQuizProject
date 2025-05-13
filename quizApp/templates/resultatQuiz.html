@@ -123,51 +123,7 @@
 </head>
 <body>
   {% load static %}
-  <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
-    <div class="container">
-      <a class="navbar-brand fw-bold" href="{% url 'home' %}"><i class="fas fa-brain me-2"></i>QuizApp</a>
-      <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item"><a class="nav-link active" href="{% url 'home' %}">Accueil</a></li>
-       
-          <li class="nav-item"><a class="nav-link " href="{% url 'quizPage' %}">Jouer</a></li>
-        </ul>
-       
-        <div>
-          {% if user.is_authenticated %}
-            <div class="d-inline">
-              <form action="{% url 'logout' %}" method="post" class="d-inline">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-light me-2">Déconnexion</button>
-              </form>
-              <a href="{%url 'profile'%}" class="me-2">
-                  {% if user.profile_picture %}
-                  <img src="{{ user.profile_picture.url }}" alt="Profil" class="rounded-circle" style="width: 40px;
-                  height: 40px;
-                  object-fit: cover;
-                  margin-right: 10px;
-                  border: 4px solid purple;">
-                  {% else %}
-                      <img src="{% static 'images/default_profile.jpg ' %}" alt="Profil" class="rounded-circle" style="width: 40px;
-                      height: 40px;
-                      object-fit: cover;
-                      margin-right: 10px;
-                      border: 4px solid purple;">
-                  </div>
-                {% endif %}
-                </a>
-          {% else %}
-            <a href="{% url 'login' %}" class="btn btn-outline-light me-2">Connexion</a>
-            <a href="{% url 'signup' %}" class="btn btn-main">Inscription</a>
-          {% endif %}
-          
-        </div>
-      </div>
-    </div>
-  </nav>
+  {% include 'navbar.html' %}
 <div class="result-container">
   <h2>Résultat du Quiz</h2>
   <div class="details mb-4">
@@ -188,43 +144,81 @@
 {% for user_answer in user_answers %}
 <div class="result-container">
   <h5 class="fw-bold">{{ user_answer.question.question_text }}</h5>
-  <ul class="answer-list">
-    <li class="{% if user_answer.user_answer == 1 %}checked-answer{% endif %}">{{ user_answer.question.reponse_1 }}</li>
-    <li class="{% if user_answer.user_answer == 2 %}checked-answer{% endif %}">{{ user_answer.question.reponse_2 }}</li>
-    <li class="{% if user_answer.user_answer == 3 %}checked-answer{% endif %}">{{ user_answer.question.reponse_3 }}</li>
-    <li class="{% if user_answer.user_answer == 4 %}checked-answer{% endif %}">{{ user_answer.question.reponse_4 }}</li>
-  </ul>
-<div class="bg-white p-3 rounded-2">
-  <p class="correct-answer">
-    Bonne réponse : 
-    {% if user_answer.question.bonne_reponse == 1 %}
-      {{ user_answer.question.reponse_1 }}
-    {% elif user_answer.question.bonne_reponse == 2 %}
-      {{ user_answer.question.reponse_2 }}
-    {% elif user_answer.question.bonne_reponse == 3 %}
-      {{ user_answer.question.reponse_3 }}
-    {% elif user_answer.question.bonne_reponse == 4 %}
-      {{ user_answer.question.reponse_4 }}
-    {% endif %}
-    <span class="icon">✔️</span>
-  </p>
-
-  <p class="user-answer {% if user_answer.user_answer == user_answer.question.bonne_reponse %}correct{% else %}wrong{% endif %}">
-    Votre réponse : 
-    {% if user_answer.user_answer == 1 %}
-      {{ user_answer.question.reponse_1 }}
-    {% elif user_answer.user_answer == 2 %}
-      {{ user_answer.question.reponse_2 }}
-    {% elif user_answer.user_answer == 3 %}
-      {{ user_answer.question.reponse_3 }}
-    {% elif user_answer.user_answer == 4 %}
-      {{ user_answer.question.reponse_4 }}
-    {% else %}
-      (Aucune réponse)
-    {% endif %}
-    <span class="icon">{% if user_answer.user_answer == user_answer.question.bonne_reponse %}✔️{% else %}❌{% endif %}</span>
-  </p>
-</div>
+  {% if user_answer.question.type_question == 'QCM' %}
+    <ul class="answer-list">
+      <li class="{% if user_answer.user_answer == 1 %}checked-answer{% endif %}">{{ user_answer.question.reponse_1 }}</li>
+      <li class="{% if user_answer.user_answer == 2 %}checked-answer{% endif %}">{{ user_answer.question.reponse_2 }}</li>
+      <li class="{% if user_answer.user_answer == 3 %}checked-answer{% endif %}">{{ user_answer.question.reponse_3 }}</li>
+      <li class="{% if user_answer.user_answer == 4 %}checked-answer{% endif %}">{{ user_answer.question.reponse_4 }}</li>
+    </ul>
+    <div class="bg-white p-3 rounded-2">
+      <p class="correct-answer">
+        Bonne réponse :
+        {% if user_answer.question.bonne_reponse == 1 %}
+          {{ user_answer.question.reponse_1 }}
+        {% elif user_answer.question.bonne_reponse == 2 %}
+          {{ user_answer.question.reponse_2 }}
+        {% elif user_answer.question.bonne_reponse == 3 %}
+          {{ user_answer.question.reponse_3 }}
+        {% elif user_answer.question.bonne_reponse == 4 %}
+          {{ user_answer.question.reponse_4 }}
+        {% endif %}
+        <span class="icon">✔️</span>
+      </p>
+      <p class="user-answer {% if user_answer.user_answer == user_answer.question.bonne_reponse %}correct{% else %}wrong{% endif %}">
+        Votre réponse :
+        {% if user_answer.user_answer == 1 %}
+          {{ user_answer.question.reponse_1 }}
+        {% elif user_answer.user_answer == 2 %}
+          {{ user_answer.question.reponse_2 }}
+        {% elif user_answer.user_answer == 3 %}
+          {{ user_answer.question.reponse_3 }}
+        {% elif user_answer.user_answer == 4 %}
+          {{ user_answer.question.reponse_4 }}
+        {% else %}
+          (Aucune réponse)
+        {% endif %}
+        <span class="icon">{% if user_answer.user_answer == user_answer.question.bonne_reponse %}✔️{% else %}❌{% endif %}</span>
+      </p>
+    </div>
+  {% elif user_answer.question.type_question == 'VF' %}
+    <ul class="answer-list">
+      <li class="{% if user_answer.user_answer == 'vrai' or user_answer.user_answer == True %}checked-answer{% endif %}">Vrai</li>
+      <li class="{% if user_answer.user_answer == 'faux' or user_answer.user_answer == False %}checked-answer{% endif %}">Faux</li>
+    </ul>
+    <div class="bg-white p-3 rounded-2">
+      <p class="correct-answer">
+        Bonne réponse :
+        {% if user_answer.question.bonne_reponse == True or user_answer.question.bonne_reponse == 'vrai' %}
+          Vrai
+        {% else %}
+          Faux
+        {% endif %}
+        <span class="icon">✔️</span>
+      </p>
+      <p class="user-answer {% if user_answer.user_answer == user_answer.question.reponse_1 %}correct{% else %}wrong{% endif %}">
+        Votre réponse :
+        {% if user_answer.user_answer == 'True' or user_answer.user_answer == True %}
+          Vrai
+        {% elif user_answer.user_answer == 'False' or user_answer.user_answer == False %}
+          Faux
+        {% else %}
+          (Aucune réponse)
+        {% endif %}
+        <span class="icon">{% if user_answer.user_answer == user_answer.question.reponse_1 %}✔️{% else %}❌{% endif %}</span>
+      </p>
+    </div>
+  {% elif user_answer.question.type_question == 'RC' %}
+    <div class="bg-white p-3 rounded-2">
+      <p class="correct-answer">
+        Bonne réponse : {{ user_answer.question.reponse_1 }} <span class="icon">✔️</span>
+      </p>
+      <p class="user-answer {% if user_answer.user_answer|lower == user_answer.question.reponse_1|lower %}correct{% else %}wrong{% endif %}">
+        Votre réponse : {{ user_answer.user_answer|default:'(Aucune réponse)' }}
+        <span class="icon">{% if user_answer.user_answer|lower == user_answer.question.reponse_1|lower %}✔️{% else %}❌{% endif %}</span>
+      </p>
+    </div>
+  {% endif %}
 </div>
 {% endfor %}
 
