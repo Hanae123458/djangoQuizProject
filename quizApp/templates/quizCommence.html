@@ -90,18 +90,31 @@
       transition: background-color 0.3s ease, transform 0.2s ease;
     }
 
-    .answers li:hover {
-      background: #ffd700;
-      color: #333;
-      transform: scale(1.05);
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  .answers li:hover {
+    background: #ffd700;
+    color: #333;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  }
+  .btn-envoyer{
+    color: rgb(0, 0, 0) !important;
+    border:rgba(134, 220, 251, 0.83);;
+    width:100px;
+    height:40px;
+    background-color:rgba(134, 251, 247, 0.832);
+    margin-bottom:0rem;
+  }
+  .btn-envoyer:hover{
+    color: rgb(0, 0, 0) !important;
+    background-color:rgb(120, 215, 250) !important; 
+    transform: scale(1.03);
+    box-shadow: 0 6px 12px rgba(148, 226, 255, 0.71) !important;
     }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .quiz-container {
-        padding: 1.5rem 2rem;
-      }
+  /* Responsive */
+  @media (max-width: 768px) {
+    .quiz-container {
+      padding: 1.5rem 2rem;
+    }
 
       h1 {
         font-size: 2rem;

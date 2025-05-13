@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Connexion - QuizApp</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  
   <style>
     body {
       background: linear-gradient(135deg, #667eea, #764ba2);
@@ -13,29 +16,40 @@
       margin: 0;
       padding: 2rem 1rem;
       min-height: 100vh;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
     }
-
     .navbar {
-      background-color: rgba(255, 255, 255, 0.15) !important;
+      background-color: rgba(255, 255, 255, 0.1) !important;
       backdrop-filter: blur(10px);
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-      margin-bottom: 2rem;
     }
-
     .navbar-brand, .nav-link {
       color: #fff !important;
-      font-weight: 600;
+      font-weight: 700;
+      letter-spacing: 1px;
       transition: color 0.3s ease;
     }
-
     .nav-link:hover, .nav-link.active {
       color: #ffd700 !important;
     }
-
+    footer {
+      background-color: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(5px);
+      color: white;
+      text-align: center;
+      padding: 0.7rem 0;
+       margin-top: auto;
+    }
     .form-container {
       max-width: 600px;
+      margin-top:2rem;
+      margin-bottom:2rem;
       background: rgba(255, 255, 255, 0.1);
-      padding: 2rem 2.5rem;
+      padding: 2rem 3rem;
       border-radius: 15px;
       box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
       backdrop-filter: blur(8.5px);
@@ -68,12 +82,32 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    .form-container input:focus,
-    .form-container select:focus,
-    .form-container textarea:focus {
+    .form-container input[type="text"],
+    .form-container input[type="password"],
+    .form-container input[type="email"],
+    .form-container select,
+    .form-container textarea {
       outline: none;
       transform: scale(1.02);
     }
+
+    .form-check-input[type="radio"] {
+      width: 1.2em;
+      height: 1.2em;
+      margin-top: 0.2em;
+      vertical-align: middle;
+      accent-color: #ffd700; /* couleur dorée */
+    }
+
+    .form-check-label {
+      margin-left: 0.3em;
+      font-weight: 500;
+    }
+    .form-check-input[type="radio"]:hover {
+      transform: scale(1.1);
+      transition: 0.2s;
+    }
+
 
     .form-container button {
       background-color: #ffd700;
@@ -107,17 +141,43 @@
   {% include 'navbar.html' %}
 
   <!-- Formulaire de connexion -->
-  <div class="container d-flex justify-content-center">
-    <div class="form-container">
-      <h2 class="text-center">Connexion</h2>
-      <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
-      </form>
-      <p class="text-center mt-3">Pas encore de compte ? <a href="{% url 'signup' %}">Créer un compte</a></p>
-    </div>
+<div class="container d-flex justify-content-center">
+  <div class="form-container">
+    <h2 class="text-center">Connexion</h2>
+
+    <form method="post">
+      {% csrf_token %}
+      
+      <!-- Rôle -->
+      <div class="mb-3">
+        <label class="form-label d-block">Choisir votre rôle :</label>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="role" id="joueur" value="joueur" required>
+          <label class="form-check-label" for="joueur">Joueur</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="role" id="createur" value="createur">
+          <label class="form-check-label" for="createur">Joueur / Créateur</label>
+        </div>
+      </div>
+
+      <!-- Formulaire d'authentification -->
+      {{ form.as_p }}
+      
+      <!-- Bouton de soumission -->
+      <button type="submit">Login</button>
+    </form>
+
+    <p class="text-center mt-3">Pas encore de compte ? <a href="{% url 'signup' %}">Créer un compte</a></p>
   </div>
+</div>
+
+
+  <footer>
+    <div class="container">
+      <p class="mb-0">© 2025 QuizApp. Votre savoir, notre mission.</p>
+    </div>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js" integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous"></script>
 </body>
