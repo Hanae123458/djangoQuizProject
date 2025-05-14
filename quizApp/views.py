@@ -242,11 +242,9 @@ class question_stats(View):
             right_answers = 0
             answer_counter = {}
             for answer in answers : 
-                # Count frequency for most_frequent_answer
                 ans_val = (answer.user_answer or '').strip().lower()
                 if ans_val:
                     answer_counter[ans_val] = answer_counter.get(ans_val, 0) + 1
-                # Handle different types of questions (QCM, VF, RC)
                 if question.type_question == 'QCM':
                     if answer.user_answer and str(answer.user_answer) == str(question.bonne_reponse):
                         right_answers += 1
@@ -258,7 +256,6 @@ class question_stats(View):
                 elif question.type_question == 'RC':
                     if answer.user_answer and answer.user_answer.strip().lower() == (question.reponse_1 or '').strip().lower():
                         right_answers += 1
-            # Find most frequent answer
             if answer_counter:
                 most_frequent_answer = max(answer_counter.items(), key=lambda x: x[1])[0]
             else:
