@@ -1,0 +1,57 @@
+@startuml SequenceQuiz
+
+actor Utilisateur as user
+participant "Joueur" as player
+participant "JoueurCréateur" as creator
+participant "SystèmeQuiz" as system
+participant "Quiz" as quiz
+participant "Question" as question
+participant "Score" as score
+
+' 1. Création d'un quiz par un JoueurCréateur
+user -> creator : Créer un nouveau quiz()
+creator -> system : createQuiz(titre, description)
+system -> quiz : new(titre, description)
+system --> creator : Confirmation création
+creator -> system : Ajouter questions()
+loop Pour chaque question
+    system -> question : new(texte, type)
+    alt Type QCM
+        question --> system : Besoin 4 réponses
+    else Type Vrai/Faux
+        question --> system : Besoin 2 réponses
+    else Réponse courte
+        question --> system : Besoin réponse attendue
+    end
+end
+system --> creator : Quiz prêt
+
+' 2. Participation à un quiz
+user -> player : Participer à quiz()
+player -> system : getAvailableQuizzes()
+system --> player : Liste des quiz
+player -> system : selectQuiz(id)
+system -> quiz : load()
+quiz -> question : getQuestions()
+question --> quiz : Liste questions
+quiz --> player : Détails quiz
+
+loop Pour chaque question
+    player -> system : submitAnswer(questionId, réponse)
+    system -> question : checkAnswer(réponse)
+    question --> system : résultat (booléen)
+    system -> score : updateScore()
+end
+
+system -> score : calculateFinalScore()
+score --> system : score final
+system --> player : Résultats finaux
+
+' 3. Consultation des scores
+user -> player : Voir scores()
+player -> system : getScores()
+system -> score : getByUser(userId)
+score --> system : Liste scores
+system --> player : Affichage scores
+
+@enduml
