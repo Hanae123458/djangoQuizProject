@@ -60,7 +60,7 @@ class TraitementFormulaireInscription(View):
         if form.is_valid():
             User = form.save()
             login(request, User)
-            return redirect('login')
+            return redirect('home')
         return render(request, 'signup.html', {'form': form})
 
 class quizPage(LoginRequiredMixin, View):
@@ -95,7 +95,8 @@ class quizCommence(LoginRequiredMixin, View):
         quiz.times_visited+=1
         quiz.save()
         questions =quiz.questions.all()
-        return render(request, 'quizCommence.html', {'quiz': quiz, 'questions': questions})
+        return render(request, 'quizCommence.html', {'quiz': quiz,
+                                                    'questions': questions})
 
 class validerReponsesQuiz(LoginRequiredMixin, View):
     def post(self, request):
@@ -137,10 +138,6 @@ class validerReponsesQuiz(LoginRequiredMixin, View):
                 if user_answer and user_answer == question.reponse_1:
                     score += 1
 
-                    
-            
-                    
-            
 
         user = request.user
         user.xp += score * 100 
@@ -268,16 +265,18 @@ class question_stats(View):
                 'proportion': proportion,
                 'most_frequent_answer': most_frequent_answer
             })
+        user = request.user
         return render(request, 'question_stats.html', {
             'questions':data,
-            "quizzes" :  Quiz.objects.all()
+            "quizzes" :  Quiz.objects.filter(creator = user)
         })
     def post(self, request):
         self.get(self, request, request.POST.get(id))
 
 class fetch_quiz_stats(View):
     def get(self, request) :
-        quizzes = Quiz.objects.all()
+        user = request.user
+        quizzes = Quiz.objects.filter(creator = user)
         return render(request, "select_quiz_stats.html", {
             "quizzes" : quizzes
         })
