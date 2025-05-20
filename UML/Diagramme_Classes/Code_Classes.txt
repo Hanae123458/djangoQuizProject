@@ -1,0 +1,64 @@
+@startuml DiagrammeClassesQuiz
+
+' ########################
+' ### Classes Principales #
+' ########################
+
+class Participant {
+  + nom_utilisateur: String
+  + prenom: String
+  + nom: String
+  + email: String
+  + mot_de_passe: String
+}
+
+class Joueur {
+  + score_moyen: Float
+}
+
+class JoueurCreateur {
+  + quiz_crees: Integer
+}
+
+class Quiz {
+  + titre: String
+  + description: Text
+}
+
+class Question {
+  + texte_question: Text
+  + type_question: enum {QCM, VRAI_FAUX, COURTE_REPONSE}
+  + reponse_1: String 
+  + reponse_2: String 
+  + reponse_3: String 
+  + reponse_4: String 
+  + bonne_reponse: Integer 
+  + reponse_attendue: String 
+}
+
+class Categorie {
+  + type_quiz: String
+}
+
+class Score {
+  + score_final: Integer
+  + date_participation: Date
+}
+
+' #######################
+' ### Relations #########
+' #######################
+
+Participant <|-- Joueur
+Participant <|-- JoueurCreateur
+
+JoueurCreateur "1" -- "0..*" Quiz : crée 
+
+Participant "1" -- "0..*" Score : obtient 
+Quiz "1" -- "0..*" Question : contient 
+Categorie "1" -- "1..*" Quiz : possède 
+
+Participant "1" -- "1..*" Quiz : participe à 
+
+
+@enduml

@@ -1,0 +1,23 @@
+@startuml QuizSystemUseCase
+
+left to right direction
+
+actor "Participant" as participant
+actor "Créateur" as creator
+actor "Joueur-Créateur" as playercreator
+
+participant <|-- playercreator
+participant <|-- creator
+
+rectangle "Système de Quiz" {
+  
+  creator --> (Créer un quiz)
+  creator --> (Gérer les questions)
+  creator --> (Gérer les catégories)
+  
+  playercreator --> (Participer à un quiz)
+  playercreator --> (Créer un quiz)
+  
+  (Participer à un quiz) .> (Répondre aux questions) : include
+}
+@enduml

@@ -26,3 +26,10 @@ media/
 
 # Ignorer les fichiers de migrations Django
 migrations/
+
+# Fichiers temporaires Microsoft Office
+~$*
+*.tmp
+~$*.docx
+~$*.xlsx
+~$*.pptx
