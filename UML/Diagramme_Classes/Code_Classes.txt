@@ -1,64 +1,65 @@
-@startuml DiagrammeClassesQuiz
+@startuml
+skinparam classAttributeIconSize 0
 
-' ########################
-' ### Classes Principales #
-' ########################
+class AbstractUser
 
 class Participant {
-  + nom_utilisateur: String
-  + prenom: String
-  + nom: String
-  + email: String
-  + mot_de_passe: String
+    +profile_picture : ImageField
+    +level : int
+    +xp : int
+    +bio : TextField
+    +is_creator : bool
+    +_str_() : str
 }
+Participant --|> AbstractUser
 
-class Joueur {
-  + score_moyen: Float
-}
-
-class JoueurCreateur {
-  + quiz_crees: Integer
+class Categorie {
+    +type_quiz : str
+    +_str_() : str
 }
 
 class Quiz {
-  + titre: String
-  + description: Text
+    +difficulte : str
+    +title : str
+    +description : TextField
+    +times_played : int
+    +times_visited : int
+    +_str_() : str
 }
 
 class Question {
-  + texte_question: Text
-  + type_question: enum {QCM, VRAI_FAUX, COURTE_REPONSE}
-  + reponse_1: String 
-  + reponse_2: String 
-  + reponse_3: String 
-  + reponse_4: String 
-  + bonne_reponse: Integer 
-  + reponse_attendue: String 
-}
-
-class Categorie {
-  + type_quiz: String
+    +question_text : str
+    +type_question : str
+    +reponse_1 : str
+    +reponse_2 : str
+    +reponse_3 : str
+    +reponse_4 : str
+    +bonne_reponse : int
+    +_str_() : str
+    +clean() : void
 }
 
 class Score {
-  + score_final: Integer
-  + date_participation: Date
+    +score_final : int
+    +date_participation : date
+    +_str_() : str
 }
 
-' #######################
-' ### Relations #########
-' #######################
+class Question_history {
+    +user_answer : str
+    +time : datetime
+    +_str_() : str
+}
 
-Participant <|-- Joueur
-Participant <|-- JoueurCreateur
+Participant "1" -- "0..*" Quiz : crée 
+Participant "1" -- "0..*" Score :obtient
+Participant "1" -- "0..*" Question_history : correspond à
 
-JoueurCreateur "1" -- "0..*" Quiz : crée 
+Categorie "1" -- "0..*" Quiz : possède 
 
-Participant "1" -- "0..*" Score : obtient 
-Quiz "1" -- "0..*" Question : contient 
-Categorie "1" -- "1..*" Quiz : possède 
+Quiz "1" -- "0..*" Question : contient
+Quiz "1" -- "0..*" Score : concerne
 
-Participant "1" -- "1..*" Quiz : participe à 
-
+Question "1" -- "0..*" Question_history
 
 @enduml
