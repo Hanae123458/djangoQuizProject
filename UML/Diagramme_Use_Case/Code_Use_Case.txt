@@ -2,22 +2,29 @@
 
 left to right direction
 
-actor "Participant" as participant
-actor "Créateur" as creator
-actor "Joueur-Créateur" as playercreator
+actor "Utilisateur" as participant
+actor "Joueur-Créateur" as creator
+actor "Joueur" as player
 
-participant <|-- playercreator
-participant <|-- creator
+participant <|-- player
+player <|-- creator
+
 
 rectangle "Système de Quiz" {
+
+participant --> (S'inscrire)
+participant --> (Se connecter)
+participant --> (consulter profil)
+
   
   creator --> (Créer un quiz)
-  creator --> (Gérer les questions)
-  creator --> (Gérer les catégories)
-  
-  playercreator --> (Participer à un quiz)
-  playercreator --> (Créer un quiz)
-  
+  creator --> (Consulter statistiques)
+  creator --> (Consulter statistiques quiz)
+
+  player --> (Participer à un quiz)
+  player --> (Consulter statistiques)
+
+
   (Participer à un quiz) .> (Répondre aux questions) : include
 }
 @enduml
