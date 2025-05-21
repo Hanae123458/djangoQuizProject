@@ -5,8 +5,6 @@ __pycache__/
 # Ignorer les fichiers de log
 *.log
 
-# Ignorer la base de données SQLite
-db.sqlite3
 
 # Ignorer les fichiers/dossiers temporaires
 *.tmp

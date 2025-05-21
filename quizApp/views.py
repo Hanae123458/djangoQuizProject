@@ -60,7 +60,7 @@ class TraitementFormulaireInscription(View):
         if form.is_valid():
             User = form.save()
             login(request, User)
-            return redirect('login')
+            return redirect('home')
         return render(request, 'signup.html', {'form': form})
 
 class quizPage(LoginRequiredMixin, View):
